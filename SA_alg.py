@@ -8,13 +8,14 @@ df = pandas.read_excel('tsp.xlsx')
 col_names = df.columns
 col_data = df.values
 
-test_p = TS_class.Tsp([1,2,3,4],[1,2,3,4],'manhattan')
-test_p2 = TS_class.Tsp([1,2,3,4],[1,2],'manhattan')
 
-z = test_p.dist_matrix()
-z2 = test_p2.dist_matrix()
+test_p = TS_class.Tsp(col_data[:, 0], col_data[:, 1], 'manhattan')
+test_p2 = TS_class.Tsp(col_data[:, 0], col_data[:, 1], 'pure')
+
+
+z = test_p2.dist_matrix()
 print(z)
-print("\n", z2)
+
 
 
 

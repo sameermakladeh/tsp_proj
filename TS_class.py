@@ -8,7 +8,7 @@ class Tsp():
         self.x_co = x_co
         self.y_co = y_co
         self.method = method
-        self.p = [self.x_co, self.y_co] #save as a point in 2D
+        self.p = [self.x_co, self.y_co] #save as a point in 2D but not sure
 
     def dist_matrix(self):
         dist_matrix = np.zeros((len(self.x_co), len(self.y_co)))
@@ -22,3 +22,24 @@ class Tsp():
                     dist_matrix[i][j] = math.sqrt(pow((self.x_co[i] - self.x_co[j]), 2) +
                                                   pow((self.y_co[i] - self.y_co[j]), 2))
         return dist_matrix
+
+    def generate_solution(self):
+        generated_sol = np.random.permutation(len(self.p[0]))
+        return generated_sol
+
+    def generate_neighbour(self, tsp_sol, choice):
+        if choice == "swap":
+            while True:
+                n1 = np.int(np.floor(np.random.uniform(0, len(tsp_sol))))
+                n2 = np.int(np.floor(np.random.uniform(0, len(tsp_sol))))
+                if n1 != n2:
+                    break
+            tsp_sol[n1], tsp_sol[n2] = tsp_sol[n2], tsp_sol[n1]
+        return tsp_sol
+
+    def solution_value(self, tsp_sol):
+        value = 0
+        matrix = self.dist_matrix()
+        for i in range(len(tsp_sol)):
+            value = value + matrix[tsp_sol[i-1], tsp_sol[i]]
+        return value

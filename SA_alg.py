@@ -1,31 +1,19 @@
-'''Give a problem and it will solve it'''
+'''An algorith to solve a given TSP'''
 
-import TS_class
-import pandas
 import numpy as np
 
 
-
-'''get all the TSP problem from an excel file'''
-df = pandas.read_excel('tsp.xlsx')
-col_names = df.columns
-col_data = df.values
-
-
-test_p = TS_class.Tsp(col_data[:, 0], col_data[:, 1], 'manhattan')
-test_p2 = TS_class.Tsp(col_data[:, 0], col_data[:, 1], 'pure')
-
-
-z1 = test_p2.dist_matrix()
-z = test_p.generate_solution()
-v_z = test_p.solution_value(z)
-print(z,v_z)
-x = test_p.generate_neighbour(z,"swap")
-v_x = test_p.solution_value(x)
-print(x,v_x)
-
-
-
-
-
-
+def solve_sa(tsprob, current_solution):
+    arg_p = np.random.rand(1)  #for now, just a random number p
+    for i in range(1,5):
+        v_1 = tsprob.solution_value(current_solution)
+        new_solution = tsprob.generate_neighbour(current_solution,"swap")
+        v_2 = tsprob.solution_value(new_solution)
+        r = np.random.rand(1)  # random a number to use in metropolis criteria
+        print("current_sol:", current_solution, v_1)
+        print("check:", new_solution, v_2)
+        print(r, arg_p)
+        if v_2 < v_1 and r < arg_p:
+            current_solution = new_solution
+            print("accepted sol:", current_solution, tsprob.solution_value(current_solution))
+    return current_solution

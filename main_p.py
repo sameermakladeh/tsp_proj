@@ -7,18 +7,20 @@ import numpy as np
 
 
 
-'''get all the TSP problem from an excel file'''
+# get all the TSP problem from an excel file
 df = pandas.read_excel('tsp.xlsx')
 col_names = df.columns
 col_data = df.values
 
-
+# make an instance of the TSP
 test_p = TS_class.Tsp(col_data[:, 0], col_data[:, 1], 'manhattan')
 test_p2 = TS_class.Tsp(col_data[:, 0], col_data[:, 1], 'pure')
 
-
+# generate a starting random solution for TSP
 z1 = test_p2.dist_matrix()
 z = test_p.generate_solution()
+
+# using the starting solution generate neighbours and accept based on algorithm criteria
 best_solution = solve_sa(test_p, z)
 print("best sol:", best_solution, test_p.solution_value(best_solution))
 

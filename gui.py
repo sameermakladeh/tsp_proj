@@ -10,5 +10,3 @@ frm = wx.Frame(None, title = 'hello world').Show()
 
 # event loop
 app.MainLoop()
-
-

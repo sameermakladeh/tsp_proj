@@ -21,7 +21,7 @@ z1 = test_p2.dist_matrix()
 z = test_p.generate_solution()
 
 # using the starting solution generate neighbours and accept based on algorithm criteria
-best_solution = solve_sa(test_p, z)
+best_solution = solve_sa(test_p, z, 100, 10, 0.8)
 print("best sol:", best_solution, test_p.solution_value(best_solution))
 
 '''v_z = test_p.solution_value(z)

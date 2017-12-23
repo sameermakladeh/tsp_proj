@@ -33,7 +33,7 @@ class Tsp():
 
     def generate_neighbour(self, tsp_sol, choice):
         # generate a neighbouring solution to the current solution based on the method of search
-        new_tsp_sol = list(tsp_sol)  #remember: python uses namespaces and not variables, so need to create a copy here!
+        new_tsp_sol = list(tsp_sol)  # remember: python uses namespaces and not variables, so create a copy here!
         if choice == "swap":
             while True:
                 # random 2 integers from the solution list and swap their places

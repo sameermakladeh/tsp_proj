@@ -7,6 +7,7 @@ import timeit
 import numpy as np
 
 
+# TODO - reorganize Main() file with proper names and calls for class/function
 
 # get all the TSP problem from an excel file
 df = pandas.read_excel('tsp.xlsx')
@@ -33,6 +34,9 @@ end_time = timeit.default_timer()
 
 print("best sol:", best_solution, test_p.solution_value(best_solution))
 print('time (sec) = ', end_time - start_time)
+
+
+# TODO - remove when reorganizing
 
 '''v_z = test_p.solution_value(z)
 x = test_p.generate_neighbour(z,"swap")

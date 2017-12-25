@@ -12,7 +12,7 @@ class Tsp():
         self.p = [self.x_co, self.y_co] #save as a point in 2D but not sure its working yet
 
     def dist_matrix(self):
-        # build distance matrix based on the type of the tsp that is given, using the coordinates
+        ''' build distance matrix based on the type of the tsp that is given, using the coordinates '''
         dist_matrix = np.zeros((len(self.x_co), len(self.y_co)))
         if self.method == 'manhattan':
             # run on all the matrix cells and in each one put the distance between 2 points (x1,y1)(x2,y2)
@@ -27,12 +27,12 @@ class Tsp():
         return dist_matrix
 
     def generate_solution(self):
-        # get a random first solution using permutations
+        ''' get a random first solution using permutations '''
         generated_sol = np.random.permutation(len(self.p[0]))
         return generated_sol
 
     def generate_neighbour(self, tsp_sol, choice):
-        # generate a neighbouring solution to the current solution based on the method of search
+        ''' generate a neighbouring solution to the current solution based on the method of search '''
         new_tsp_sol = list(tsp_sol)  # remember: python uses namespaces and not variables, so create a copy here!
         if choice == "swap":
             while True:
@@ -45,7 +45,7 @@ class Tsp():
         return new_tsp_sol
 
     def solution_value(self, tsp_sol):
-        # compute a solutions value using the distance matrix
+        ''' compute a solutions value using the distance matrix '''
         value = 0
         matrix = self.dist_matrix()
         for i in range(len(tsp_sol)):

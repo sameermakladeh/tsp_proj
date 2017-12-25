@@ -3,7 +3,7 @@
 import wx
 import os
 
-
+#app 1
 class ExamplePanel(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
@@ -74,7 +74,6 @@ class ExamplePanel(wx.Panel):
     def EvtCheckBox(self, event):
         self.logger.AppendText('EvtCheckBox: %d\n' % event.Checked())
 
-
 app = wx.App(False)
 frame = wx.Frame(None, title = "Demo with notebook")
 nb = wx.Notebook(frame)
@@ -85,20 +84,7 @@ nb.AddPage(ExamplePanel(nb), "page 3")
 frame.Show()
 app.MainLoop()
 
-
-'''
-app = wx.App(False)
-frame = wx.Frame(None)
-panel = ExamplePanel(frame)
-frame.Show()
-app.MainLoop()
-'''
-
-
-
-
-
-'''
+# app 2
 class MainWindow(wx.Frame):
     # derive from frame a new class
     def __init__(self, parent, title):
@@ -169,11 +155,7 @@ frame = MainWindow(None, "something something")  # frame is the top level window
 app.MainLoop()
 
 
-'''
-
-
-
-'''
+# app 3
 # create a frame and show it
 class HelloFrame(wx.Frame):
     # a frame that says something
@@ -239,7 +221,7 @@ if __name__ == '__main__':
     frm.Show()
     app.MainLoop()
 
-'''
+
 
 
 

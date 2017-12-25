@@ -5,7 +5,7 @@ import math
 
 
 def solve_sa(tsprob, current_solution, t_max, t_min, a):
-    # get a given solution for the tsp and find a better one using the algorithm
+    ''' get a given solution for the tsp and find a better one using the algorithm '''
     v_curr = tsprob.solution_value(current_solution)
     t = t_max
     while t > t_min:

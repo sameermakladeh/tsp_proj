@@ -2,6 +2,7 @@
 import wx
 import wx.xrc
 import wx.grid
+import os
 
 
 class SAFrame(wx.Frame):
@@ -91,9 +92,8 @@ class SAFrame(wx.Frame):
 
         sbSizer11 = wx.StaticBoxSizer(wx.StaticBox(sbSizer5.GetStaticBox(), wx.ID_ANY, u"label"), wx.VERTICAL)
 
-        self.m_toggleBtn1 = wx.ToggleButton(sbSizer11.GetStaticBox(), wx.ID_ANY, u"Solve!", wx.DefaultPosition,
-                                            wx.DefaultSize, 0)
-        sbSizer11.Add(self.m_toggleBtn1, 0, wx.ALL, 5)
+        self.solvit = wx.Button(sbSizer11.GetStaticBox(), wx.ID_ANY, u"Solve!", wx.DefaultPosition, wx.DefaultSize, 0)
+        sbSizer11.Add(self.solvit, 0, wx.ALL, 5)
 
         self.init_sol = wx.Panel(sbSizer11.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(-1, -1),
                                  wx.TAB_TRAVERSAL)
@@ -152,13 +152,13 @@ class SAFrame(wx.Frame):
 
         gSizer7 = wx.GridSizer(0, 2, 0, 0)
 
-        self.m_toggleBtn6 = wx.ToggleButton(sbSizer9.GetStaticBox(), wx.ID_ANY, u"import data", wx.DefaultPosition,
-                                            wx.DefaultSize, 0)
-        gSizer7.Add(self.m_toggleBtn6, 0, wx.ALL, 5)
+        self.imdata = wx.Button(sbSizer9.GetStaticBox(), wx.ID_ANY, u"Import Data", wx.DefaultPosition, wx.DefaultSize,
+                                0)
+        gSizer7.Add(self.imdata, 0, wx.ALL, 5)
 
-        self.m_toggleBtn7 = wx.ToggleButton(sbSizer9.GetStaticBox(), wx.ID_ANY, u"export data", wx.DefaultPosition,
-                                            wx.DefaultSize, 0)
-        gSizer7.Add(self.m_toggleBtn7, 0, wx.ALL, 5)
+        self.exdata = wx.Button(sbSizer9.GetStaticBox(), wx.ID_ANY, u"Export Data", wx.DefaultPosition, wx.DefaultSize,
+                                0)
+        gSizer7.Add(self.exdata, 0, wx.ALL, 5)
 
         fgSizer4.Add(gSizer7, 1, wx.EXPAND, 5)
 
@@ -210,11 +210,10 @@ class SAFrame(wx.Frame):
         self.min_tmp.Bind(wx.EVT_TEXT, self.on_mintemp)
         self.m_alph.Bind(wx.EVT_TEXT, self.on_alpha)
         self.iter_num.Bind(wx.EVT_TEXT, self.on_iteration)
-        self.m_toggleBtn1.Bind(wx.EVT_TOGGLEBUTTON, self.on_solve)
-        self.m_toggleBtn6.Bind(wx.EVT_TOGGLEBUTTON, self.on_import)
-        self.m_toggleBtn7.Bind(wx.EVT_TOGGLEBUTTON, self.on_export)
+        self.solvit.Bind(wx.EVT_BUTTON, self.on_solvit)
+        self.imdata.Bind(wx.EVT_BUTTON, self.onimdata)
+        self.exdata.Bind(wx.EVT_BUTTON, self.onexdata)
         self.optimize.Bind(wx.EVT_BUTTON, self.on_optimize)
-
         self.Show()
     def __del__(self):
         pass
@@ -240,30 +239,38 @@ class SAFrame(wx.Frame):
         dlg.ShowModal()
         dlg.Destroy()
 
+    global pars, opt_pars
+    pars = opt_pars = [0, 0, 0, 0]
 
     def on_maxtemp(self, event):
-        event.Skip()
+        pars[0] = float(self.max_tmp.GetValue())
 
     def on_mintemp(self, event):
-        event.Skip()
+        pars[1] = float(self.min_tmp.GetValue())
 
     def on_alpha(self, event):
-        event.Skip()
+        pars[2] = float(self.m_alph.GetValue())
 
     def on_iteration(self, event):
+        pars[3] = float(self.iter_num.GetValue())
+
+    def on_solvit(self, event):
+        # os.system('main_p.py')
+        LAYOUT = "{!s:16} {!s:16} {!s:16} {!s:16}"
+        print(LAYOUT.format("Max Temperature", "Min Temperature", "Alpha", "Iteration Number"))
+        print(LAYOUT.format(*pars))
+
+    def onimdata(self, event):
         event.Skip()
 
-    def on_solve(self, event):
-        event.Skip()
-
-    def on_import(self, event):
-        event.Skip()
-
-    def on_export(self, event):
+    def onexdata(self, event):
         event.Skip()
 
     def on_optimize(self, event):
-        event.Skip()
+        # os.system('optimize_p.py')
+        LAYOUT = "{!s:16} {!s:16} {!s:16} {!s:16}"
+        print(LAYOUT.format("Max Temperature", "Min Temperature", "Alpha", "Iteration Number"))
+        print(LAYOUT.format(*opt_pars))
 
 
 app = wx.App(False)  # does not redirects stdout to a window

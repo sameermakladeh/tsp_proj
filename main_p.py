@@ -4,6 +4,7 @@ import TS_class
 from SA_alg import solve_sa
 import pandas
 import timeit
+# import SA_GUI
 import numpy as np
 
 
@@ -14,26 +15,36 @@ df = pandas.read_excel('tsp.xlsx')
 col_names = df.columns
 col_data = df.values
 
-# make an instance of the TSP
-test_p = TS_class.Tsp(col_data[:, 0], col_data[:, 1], 'manhattan')
-test_p2 = TS_class.Tsp(col_data[:, 0], col_data[:, 1], 'pure')
+# app = SA_GUI.wx.App(False)  # does not redirects stdout to a window
+# frame = SA_GUI.SAFrame(None)  # frame is the top level window
+# app.MainLoop()
 
-# generate a starting random solution for TSP
-z1 = test_p2.dist_matrix()
-start_time = timeit.default_timer()
-z = test_p.generate_solution()
 
-# using the starting solution generate neighbours and accept based on algorithm criteria
-max_temperature = 100
-min_temperature = 10
-alpha = 0.8
-par = [max_temperature, min_temperature, alpha]
+def solve():
+    ''' make an instance of the TSP '''
+    test_p = TS_class.Tsp(col_data[:, 0], col_data[:, 1], 'manhattan')
+    # test_p2 = TS_class.Tsp(col_data[:, 0], col_data[:, 1], 'pure')
 
-best_solution = solve_sa(test_p, z, par[0], par[1], par[2])  # probably too bad of parameters
-end_time = timeit.default_timer()
+    ''' generate a starting random solution for TSP '''
+    # z1 = test_p2.dist_matrix()
+    start_time = timeit.default_timer()
+    z = test_p.generate_solution()
 
-print("best sol:", best_solution, test_p.solution_value(best_solution))
-print('time (sec) = ', end_time - start_time)
+    '''  using the starting solution generate neighbours and accept based on algorithm criteria '''
+    max_temperature = 100
+    min_temperature = 10
+    alpha = 0.8
+    iter_n = 20
+    par = [max_temperature, min_temperature, alpha, iter_n]
+
+    best_solution = solve_sa(test_p, z, par[0], par[1], par[2], par[3])  # probably too bad of parameters
+    end_time = timeit.default_timer()
+
+    print("best sol:", best_solution, test_p.solution_value(best_solution))
+    print('time (sec) = ', end_time - start_time)
+
+
+solve()
 
 
 # TODO - remove when reorganizing

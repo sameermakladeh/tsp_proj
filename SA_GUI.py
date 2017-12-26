@@ -3,6 +3,7 @@ import wx
 import wx.xrc
 import wx.grid
 import os
+import numpy as np
 
 
 class SAFrame(wx.Frame):
@@ -126,6 +127,12 @@ class SAFrame(wx.Frame):
         self.tspdata.SetGridLineColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT))
         self.tspdata.EnableDragGridSize(False)
         self.tspdata.SetMargins(0, 0)
+        for i in range(10):
+            for j in range(2):
+                self.tspdata.SetCellValue(i, j, '0')
+                self.tspdata.SetCellEditor(i, j, wx.grid.GridCellFloatEditor())
+
+
 
         # Columns
         self.tspdata.EnableDragColMove(False)
@@ -211,6 +218,7 @@ class SAFrame(wx.Frame):
         self.m_alph.Bind(wx.EVT_TEXT, self.on_alpha)
         self.iter_num.Bind(wx.EVT_TEXT, self.on_iteration)
         self.solvit.Bind(wx.EVT_BUTTON, self.on_solvit)
+        self.tspdata.Bind(wx.grid.EVT_GRID_CELL_CHANGED, self.on_change_data)
         self.imdata.Bind(wx.EVT_BUTTON, self.onimdata)
         self.exdata.Bind(wx.EVT_BUTTON, self.onexdata)
         self.optimize.Bind(wx.EVT_BUTTON, self.on_optimize)
@@ -255,10 +263,22 @@ class SAFrame(wx.Frame):
         pars[3] = float(self.iter_num.GetValue())
 
     def on_solvit(self, event):
+        # TODO change calling main to calling it with TSP and paramaters
         # os.system('main_p.py')
         LAYOUT = "{!s:16} {!s:16} {!s:16} {!s:16}"
         print(LAYOUT.format("Max Temperature", "Min Temperature", "Alpha", "Iteration Number"))
         print(LAYOUT.format(*pars))
+
+    def on_change_data(self, event):
+        headers = [self.tspdata.GetColLabelValue(0), self.tspdata.GetColLabelValue(1)]
+        col_num = self.tspdata.GetNumberCols()
+        row_num = self.tspdata.GetNumberRows()
+        print(headers)
+        df = np.zeros((row_num, col_num))
+        for i in range(row_num):
+            for j in range(col_num):
+                df[i][j] = self.tspdata.GetCellValue(i, j)
+        print(df[:, 0], df[:, 1])
 
     def onimdata(self, event):
         event.Skip()

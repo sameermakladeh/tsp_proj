@@ -7,7 +7,6 @@ import timeit
 # import SA_GUI
 import numpy as np
 
-
 # TODO - reorganize Main() file with proper names and calls for class/function
 
 # get all the TSP problem from an excel file
@@ -43,6 +42,7 @@ def solve():
     print("best sol:", best_solution, test_p.solution_value(best_solution))
     print('time (sec) = ', end_time - start_time)
 
+    return best_solution, end_time
 
 solve()
 

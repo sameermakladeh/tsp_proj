@@ -3,7 +3,10 @@ import wx
 import wx.xrc
 import wx.grid
 import os
+import main_p
 import numpy as np
+import wxmplot
+
 
 
 class SAFrame(wx.Frame):
@@ -112,6 +115,7 @@ class SAFrame(wx.Frame):
         fgSizer4.SetFlexibleDirection(wx.BOTH)
         fgSizer4.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_SPECIFIED)
 
+        ''' Graph initial data '''
         self.init_graph = wx.Panel(sbSizer9.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(300, 50),
                                    wx.TAB_TRAVERSAL)
         self.init_graph.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNHIGHLIGHT))
@@ -181,7 +185,7 @@ class SAFrame(wx.Frame):
 
         self.opt_sol = wx.Panel(sbSizer6.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(50, 50),
                                 wx.TAB_TRAVERSAL)
-        self.opt_sol.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BACKGROUND))
+        self.opt_sol.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
 
         sbSizer6.Add(self.opt_sol, 1, wx.EXPAND | wx.ALL, 5)
 
@@ -219,10 +223,16 @@ class SAFrame(wx.Frame):
         self.iter_num.Bind(wx.EVT_TEXT, self.on_iteration)
         self.solvit.Bind(wx.EVT_BUTTON, self.on_solvit)
         self.tspdata.Bind(wx.grid.EVT_GRID_CELL_CHANGED, self.on_change_data)
+        self.init_graph.Bind(wx.EVT_LEFT_DCLICK, self.draw_init)
         self.imdata.Bind(wx.EVT_BUTTON, self.onimdata)
         self.exdata.Bind(wx.EVT_BUTTON, self.onexdata)
         self.optimize.Bind(wx.EVT_BUTTON, self.on_optimize)
         self.Show()
+
+    global pars, opt_pars, curr_data
+    pars = opt_pars = [0, 0, 0, 0]
+    curr_data = np.zeros((10,2))
+
     def __del__(self):
         pass
 
@@ -247,8 +257,6 @@ class SAFrame(wx.Frame):
         dlg.ShowModal()
         dlg.Destroy()
 
-    global pars, opt_pars
-    pars = opt_pars = [0, 0, 0, 0]
 
     def on_maxtemp(self, event):
         pars[0] = float(self.max_tmp.GetValue())
@@ -264,10 +272,16 @@ class SAFrame(wx.Frame):
 
     def on_solvit(self, event):
         # TODO change calling main to calling it with TSP and paramaters
-        # os.system('main_p.py')
-        LAYOUT = "{!s:16} {!s:16} {!s:16} {!s:16}"
-        print(LAYOUT.format("Max Temperature", "Min Temperature", "Alpha", "Iteration Number"))
-        print(LAYOUT.format(*pars))
+        sol = main_p.solve()
+        labs = ["best solution","time"]
+        sols = [labs[0], str(sol[0]), labs[1], str(sol[1])]
+        self.init_sol.some_text = wx.StaticText(self.init_sol, label= str(sols), size=(220,60), style=wx.ALIGN_CENTER)
+
+
+
+        #LAYOUT = "{!s:16} {!s:16} {!s:16} {!s:16}"
+        #print(LAYOUT.format("Max Temperature", "Min Temperature", "Alpha", "Iteration Number"))
+        #print(LAYOUT.format(*pars))
 
     def on_change_data(self, event):
         headers = [self.tspdata.GetColLabelValue(0), self.tspdata.GetColLabelValue(1)]
@@ -278,7 +292,14 @@ class SAFrame(wx.Frame):
         for i in range(row_num):
             for j in range(col_num):
                 df[i][j] = self.tspdata.GetCellValue(i, j)
-        print(df[:, 0], df[:, 1])
+                curr_data[i][j] = df[i][j]
+
+    def draw_init(self, event):
+
+        pl = wxmplot.PlotPanel(self.init_graph, size=(300,215), dpi=100, fontsize=9)
+        pl.clear()
+        pl.plot(curr_data[:, 0], curr_data[:, 1])
+
 
     def onimdata(self, event):
         event.Skip()
@@ -292,7 +313,19 @@ class SAFrame(wx.Frame):
         print(LAYOUT.format("Max Temperature", "Min Temperature", "Alpha", "Iteration Number"))
         print(LAYOUT.format(*opt_pars))
 
+        sol = main_p.solve()
+        labs = ["best solution","time"]
+        sols = [labs[0], str(sol[0]), labs[1], str(sol[1])]
+        self.opt_sol.some_text = wx.StaticText(self.opt_sol, label= str(sols), size=(230,70), style=wx.ALIGN_CENTER)
+
+        self.opt_par.some_text = wx.StaticText(self.opt_par, label= str(opt_pars), size=(230,70), style=wx.ALIGN_CENTER)
+
 
 app = wx.App(False)  # does not redirects stdout to a window
 frame = SAFrame(None)  # frame is the top level window
+
+''' inspect the layout '''
+#import wx.lib.inspection as wxli
+#wxli.InspectionTool().Show()
+
 app.MainLoop()

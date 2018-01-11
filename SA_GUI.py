@@ -9,7 +9,6 @@ import wxmplot
 import pandas
 
 
-
 class SAFrame(wx.Frame):
     # derive from frame a new class
     def __init__(self, parent):
@@ -132,17 +131,17 @@ class SAFrame(wx.Frame):
         self.tspdata.SetGridLineColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT))
         self.tspdata.EnableDragGridSize(False)
         self.tspdata.SetMargins(0, 0)
-        for i in range(10):
+        for i in range(25):
             for j in range(2):
                 self.tspdata.SetCellValue(i, j, '0')
                 self.tspdata.SetCellEditor(i, j, wx.grid.GridCellFloatEditor())
-
-
 
         # Columns
         self.tspdata.EnableDragColMove(False)
         self.tspdata.EnableDragColSize(True)
         self.tspdata.SetColLabelSize(30)
+        self.tspdata.SetColLabelValue(0, u"X")
+        self.tspdata.SetColLabelValue(1, u"Y")
         self.tspdata.SetColLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
 
         # Rows
@@ -273,8 +272,8 @@ class SAFrame(wx.Frame):
     def on_solvit(self, event):
         # TODO change calling SA_solve to calling it with TSP and paramaters
         sol = SA_solve.solve(curr_data, pars)
-        labs = ["best solution","time"]
-        sols = [labs[0], str(sol[0]), labs[1], str(sol[1])]
+        labs = ["best value", "time"]
+        sols = [labs[0], str(sol[1]), labs[1], str(sol[2])]
         self.init_sol.some_text = wx.StaticText(self.init_sol, label= str(sols), size=(220,60), style=wx.ALIGN_CENTER)
 
         ''' Plot the graph so the order of visited points correspondes with the solution'''
@@ -294,7 +293,6 @@ class SAFrame(wx.Frame):
         #print(LAYOUT.format(*pars))
 
     def on_change_data(self, event):
-        headers = [self.tspdata.GetColLabelValue(0), self.tspdata.GetColLabelValue(1)]
         col_num = self.tspdata.GetNumberCols()
         row_num = self.tspdata.GetNumberRows()
         for i in range(row_num):
@@ -332,13 +330,13 @@ class SAFrame(wx.Frame):
 
     def on_optimize(self, event):
         # os.system('optimize_p.py') for now it does nothing TODO - make an optimized version
-        LAYOUT = "{!s:16} {!s:16} {!s:16} {!s:16}"
-        print(LAYOUT.format("Max Temperature", "Min Temperature", "Alpha", "Iteration Number"))
-        print(LAYOUT.format(*opt_pars))
+        #LAYOUT = "{!s:16} {!s:16} {!s:16} {!s:16}"
+        #print(LAYOUT.format("Max Temperature", "Min Temperature", "Alpha", "Iteration Number"))
+        #print(LAYOUT.format(*opt_pars))
 
         sol = SA_solve.solve(curr_data, pars)
-        labs = ["best solution", "time"]
-        sols = [labs[0], str(sol[0]), labs[1], str(sol[1])]
+        labs = ["best value", "time"]
+        sols = [labs[0], str(sol[1]), labs[1], str(sol[2])]
         self.opt_sol.some_text = wx.StaticText(self.opt_sol, label=str(sols), size=(230, 70), style=wx.ALIGN_CENTER)
 
         self.opt_par.some_text = wx.StaticText(self.opt_par, label=str(opt_pars), size=(230, 70), style=wx.ALIGN_CENTER)

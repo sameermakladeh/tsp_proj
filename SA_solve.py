@@ -32,7 +32,7 @@ def solve(data, paramaters):
     print("best sol:", best_solution, test_p.solution_value(best_solution))
     print('time (sec) = ', end_time - start_time)
 
-    return best_solution, end_time
+    return best_solution, test_p.solution_value(best_solution), end_time
 
 
 

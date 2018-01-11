@@ -9,19 +9,13 @@ import numpy as np
 
 # TODO - reorganize Main() file with proper names and calls for class/function
 
-# get all the TSP problem from an excel file
-df = pandas.read_excel('tsp.xlsx')
-col_names = df.columns
-col_data = df.values
 
-# app = SA_GUI.wx.App(False)  # does not redirects stdout to a window
-# frame = SA_GUI.SAFrame(None)  # frame is the top level window
-# app.MainLoop()
+def solve(data, paramaters):
 
-
-def solve():
     ''' make an instance of the TSP '''
-    test_p = TS_class.Tsp(col_data[:, 0], col_data[:, 1], 'manhattan')
+    xdata, ydata, dtype = data[:, 0], data[:, 1], 'manhattan'
+    test_p = TS_class.Tsp(xdata, ydata, dtype)
+
     # test_p2 = TS_class.Tsp(col_data[:, 0], col_data[:, 1], 'pure')
 
     ''' generate a starting random solution for TSP '''
@@ -30,34 +24,15 @@ def solve():
     z = test_p.generate_solution()
 
     '''  using the starting solution generate neighbours and accept based on algorithm criteria '''
-    max_temperature = 100
-    min_temperature = 10
-    alpha = 0.8
-    iter_n = 20
-    par = [max_temperature, min_temperature, alpha, iter_n]
 
-    best_solution = solve_sa(test_p, z, par[0], par[1], par[2], par[3])  # probably too bad of parameters
+    best_solution = solve_sa(test_p, z, paramaters[0], paramaters[1], paramaters[2], paramaters[3])
+
     end_time = timeit.default_timer()
 
     print("best sol:", best_solution, test_p.solution_value(best_solution))
     print('time (sec) = ', end_time - start_time)
 
     return best_solution, end_time
-
-
-
-
-# TODO - remove when reorganizing
-
-'''v_z = test_p.solution_value(z)
-x = test_p.generate_neighbour(z,"swap")
-w = test_p.generate_neighbour(z, "swap")
-t = test_p.generate_neighbour(x, "swap")
-v_x = test_p.solution_value(x)
-print("z",z,v_z)
-print("w",w)
-print("x",x, v_x)
-print("t",t)'''
 
 
 

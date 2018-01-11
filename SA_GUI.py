@@ -6,6 +6,7 @@ import os
 import main_p
 import numpy as np
 import wxmplot
+import pandas
 
 
 
@@ -271,15 +272,21 @@ class SAFrame(wx.Frame):
 
     def on_solvit(self, event):
         # TODO change calling main to calling it with TSP and paramaters
-        sol = main_p.solve()
+        sol = main_p.solve(curr_data, pars)
         labs = ["best solution","time"]
         sols = [labs[0], str(sol[0]), labs[1], str(sol[1])]
         self.init_sol.some_text = wx.StaticText(self.init_sol, label= str(sols), size=(220,60), style=wx.ALIGN_CENTER)
 
+        ''' Plot the graph so the order of visited points correspondes with the solution'''
         pl = wxmplot.PlotPanel(self.init_graph, size=(300,215), dpi=100, fontsize=9)
         pl.clear()
-        # Not sure why i need to provide limits but it wont work without!! :@
-        pl.plot(curr_data[:, 0], curr_data[:, 1])
+        plot_data = np.zeros((10, 2))
+        j = 0
+        for i in sol[0]:
+            plot_data[j, 0] = curr_data[i, 0]
+            plot_data[j, 1] = curr_data[i, 1]
+            j += 1
+        pl.plot(plot_data[:, 0], plot_data[:, 1])
 
 
         #LAYOUT = "{!s:16} {!s:16} {!s:16} {!s:16}"
@@ -306,7 +313,22 @@ class SAFrame(wx.Frame):
 
 
     def onimdata(self, event):
-        event.Skip()
+        d_file = pandas.read_excel('tsp.xlsx')
+        col_names = d_file.columns
+        col_data = d_file.values
+        for i in range(len(col_data[:, 0])):
+            for j in range(2):
+                self.tspdata.SetCellValue(i, j, str(col_data[i][j]))
+                self.tspdata.SetCellEditor(i, j, wx.grid.GridCellFloatEditor())
+                curr_data[i][j] = self.tspdata.GetCellValue(i, j)
+
+        pl = wxmplot.PlotPanel(self.init_graph, size=(300, 215), dpi=100, fontsize=9)
+        pl.clear()
+        # Not sure why i need to provide limits but it wont work without!! :@
+        pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=15, xmax=max(curr_data[:, 0]) * 1.1,
+                       ymax=max(curr_data[:, 1]) * 1.15, xmin=min(min(curr_data[:, 0]) * 1.1, 0),
+                       ymin=min(min(curr_data[:, 1]) * 1.15, 0))
+
 
     def onexdata(self, event):
         event.Skip()
@@ -317,18 +339,23 @@ class SAFrame(wx.Frame):
         print(LAYOUT.format("Max Temperature", "Min Temperature", "Alpha", "Iteration Number"))
         print(LAYOUT.format(*opt_pars))
 
-        sol = main_p.solve()
+        sol = main_p.solve(curr_data, pars)
         labs = ["best solution","time"]
         sols = [labs[0], str(sol[0]), labs[1], str(sol[1])]
         self.opt_sol.some_text = wx.StaticText(self.opt_sol, label= str(sols), size=(230,70), style=wx.ALIGN_CENTER)
 
         self.opt_par.some_text = wx.StaticText(self.opt_par, label= str(opt_pars), size=(230,70), style=wx.ALIGN_CENTER)
 
-        # Plots the new graph and gives benchmarking output
+        ''' Plot the graph so the order of visited points correspondes with the solution'''
         pl = wxmplot.PlotPanel(self.opt_graph, size=(300,215), dpi=100, fontsize=9)
         pl.clear()
-        # Not sure why i need to provide limits but it wont work without!! :@
-        pl.plot(curr_data[:, 0], curr_data[:, 1])
+        plot_data = np.zeros((10, 2))
+        j = 0
+        for i in sol[0]:
+            plot_data[j, 0] = curr_data[i, 0]
+            plot_data[j, 1] = curr_data[i, 1]
+            j += 1
+        pl.plot(plot_data[:, 0], plot_data[:, 1])
 
         opt_bench = ' Benchmarking is here '
         self.opt_par.some_text = wx.StaticText(self.opt_graph, label= str(opt_bench),
@@ -337,7 +364,7 @@ class SAFrame(wx.Frame):
 app = wx.App(False)  # does not redirects stdout to a window
 frame = SAFrame(None)  # frame is the top level window
 
-''' inspect the layout '''
+''' inspect the layout if needed '''
 #import wx.lib.inspection as wxli
 #wxli.InspectionTool().Show()
 

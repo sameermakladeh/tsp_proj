@@ -9,7 +9,7 @@ def solve_sa(tsprob, current_solution, t_max, t_min, alpha, iter_n):
     v_curr = tsprob.solution_value(current_solution)
     t = t_max
     while t > t_min:
-        for p in range(iter_n):
+        for p in range(int(iter_n)):
             new_solution = tsprob.generate_neighbour(current_solution,"swap")
             v_new = tsprob.solution_value(new_solution)
             delta = v_new - v_curr
@@ -26,7 +26,7 @@ def solve_sa(tsprob, current_solution, t_max, t_min, alpha, iter_n):
                 v_curr = v_new
                 print("accepted sol - prob:", current_solution, v_curr)
         t = t*alpha
-    return current_solution
+    return current_solution  # TODO - need to add the option for storing best solution found since the start of the alg.
 
 
 

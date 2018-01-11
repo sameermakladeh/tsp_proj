@@ -231,7 +231,7 @@ class SAFrame(wx.Frame):
 
     global pars, opt_pars, curr_data
     pars = opt_pars = [0, 0, 0, 0]
-    curr_data = np.zeros((10,2))
+    curr_data = np.zeros((250,2))
 
     def __del__(self):
         pass

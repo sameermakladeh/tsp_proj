@@ -44,7 +44,7 @@ def solve():
 
     return best_solution, end_time
 
-solve()
+
 
 
 # TODO - remove when reorganizing

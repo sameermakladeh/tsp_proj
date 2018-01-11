@@ -223,7 +223,6 @@ class SAFrame(wx.Frame):
         self.iter_num.Bind(wx.EVT_TEXT, self.on_iteration)
         self.solvit.Bind(wx.EVT_BUTTON, self.on_solvit)
         self.tspdata.Bind(wx.grid.EVT_GRID_CELL_CHANGED, self.on_change_data)
-        self.init_graph.Bind(wx.EVT_LEFT_DCLICK, self.draw_init)
         self.imdata.Bind(wx.EVT_BUTTON, self.onimdata)
         self.exdata.Bind(wx.EVT_BUTTON, self.onexdata)
         self.optimize.Bind(wx.EVT_BUTTON, self.on_optimize)
@@ -277,6 +276,10 @@ class SAFrame(wx.Frame):
         sols = [labs[0], str(sol[0]), labs[1], str(sol[1])]
         self.init_sol.some_text = wx.StaticText(self.init_sol, label= str(sols), size=(220,60), style=wx.ALIGN_CENTER)
 
+        pl = wxmplot.PlotPanel(self.init_graph, size=(300,215), dpi=100, fontsize=9)
+        pl.clear()
+        # Not sure why i need to provide limits but it wont work without!! :@
+        pl.plot(curr_data[:, 0], curr_data[:, 1])
 
 
         #LAYOUT = "{!s:16} {!s:16} {!s:16} {!s:16}"
@@ -294,11 +297,12 @@ class SAFrame(wx.Frame):
                 df[i][j] = self.tspdata.GetCellValue(i, j)
                 curr_data[i][j] = df[i][j]
 
-    def draw_init(self, event):
-
         pl = wxmplot.PlotPanel(self.init_graph, size=(300,215), dpi=100, fontsize=9)
         pl.clear()
-        pl.plot(curr_data[:, 0], curr_data[:, 1])
+        # Not sure why i need to provide limits but it wont work without!! :@
+        pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=15, xmax=max(curr_data[:, 0])*1.1,
+                       ymax=max(curr_data[:, 1])*1.15, xmin=min(min(curr_data[:, 0])*1.1, 0),
+                       ymin=min(min(curr_data[:, 1])*1.15,0))
 
 
     def onimdata(self, event):
@@ -308,7 +312,7 @@ class SAFrame(wx.Frame):
         event.Skip()
 
     def on_optimize(self, event):
-        # os.system('optimize_p.py')
+        # os.system('optimize_p.py') for now it does nothing TODO - make an optimized version
         LAYOUT = "{!s:16} {!s:16} {!s:16} {!s:16}"
         print(LAYOUT.format("Max Temperature", "Min Temperature", "Alpha", "Iteration Number"))
         print(LAYOUT.format(*opt_pars))
@@ -320,6 +324,15 @@ class SAFrame(wx.Frame):
 
         self.opt_par.some_text = wx.StaticText(self.opt_par, label= str(opt_pars), size=(230,70), style=wx.ALIGN_CENTER)
 
+        # Plots the new graph and gives benchmarking output
+        pl = wxmplot.PlotPanel(self.opt_graph, size=(300,215), dpi=100, fontsize=9)
+        pl.clear()
+        # Not sure why i need to provide limits but it wont work without!! :@
+        pl.plot(curr_data[:, 0], curr_data[:, 1])
+
+        opt_bench = ' Benchmarking is here '
+        self.opt_par.some_text = wx.StaticText(self.opt_graph, label= str(opt_bench),
+                                               size=(230,70), style=wx.ALIGN_CENTER, pos=(350,50))
 
 app = wx.App(False)  # does not redirects stdout to a window
 frame = SAFrame(None)  # frame is the top level window

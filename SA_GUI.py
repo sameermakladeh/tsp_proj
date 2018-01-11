@@ -123,16 +123,16 @@ class SAFrame(wx.Frame):
 
         fgSizer4.Add(self.init_graph, 1, wx.EXPAND | wx.ALL, 5)
 
-        self.tspdata = wx.grid.Grid(sbSizer9.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(240, 220), wx.VSCROLL)
+        self.tspdata = wx.grid.Grid(sbSizer9.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
 
         ''' set up the Grid for TSP data '''
-        self.tspdata.CreateGrid(250, 2)
+        self.tspdata.CreateGrid(10, 2)
         self.tspdata.EnableEditing(True)
         self.tspdata.EnableGridLines(True)
         self.tspdata.SetGridLineColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT))
         self.tspdata.EnableDragGridSize(False)
         self.tspdata.SetMargins(0, 0)
-        for i in range(250):
+        for i in range(10):
             for j in range(2):
                 self.tspdata.SetCellValue(i, j, '0')
                 self.tspdata.SetCellEditor(i, j, wx.grid.GridCellFloatEditor())
@@ -147,7 +147,7 @@ class SAFrame(wx.Frame):
 
         # Rows
         self.tspdata.EnableDragRowSize(True)
-        self.tspdata.SetRowLabelSize(63)
+        self.tspdata.SetRowLabelSize(80)
         self.tspdata.SetRowLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
 
         # Label Appearance
@@ -231,7 +231,7 @@ class SAFrame(wx.Frame):
 
     global pars, opt_pars, curr_data
     pars = opt_pars = [0, 0, 0, 0]
-    curr_data = np.zeros((250,2))
+    curr_data = np.zeros((10,2))
 
     def __del__(self):
         pass
@@ -271,7 +271,7 @@ class SAFrame(wx.Frame):
         pars[3] = float(self.iter_num.GetValue())
 
     def on_solvit(self, event):
-        # TODO change calling solve to calling it with TSP and paramaters
+        # TODO change calling SA_solve to calling it with TSP and paramaters
         sol = SA_solve.solve(curr_data, pars)
         labs = ["best solution","time"]
         sols = [labs[0], str(sol[0]), labs[1], str(sol[1])]
@@ -280,7 +280,7 @@ class SAFrame(wx.Frame):
         ''' Plot the graph so the order of visited points correspondes with the solution'''
         pl = wxmplot.PlotPanel(self.init_graph, size=(300,215), dpi=100, fontsize=9)
         pl.clear()
-        plot_data = np.zeros((250, 2))
+        plot_data = np.zeros((10, 2))
         j = 0
         for i in sol[0]:
             plot_data[j, 0] = curr_data[i, 0]
@@ -335,9 +335,9 @@ class SAFrame(wx.Frame):
 
     def on_optimize(self, event):
         # os.system('optimize_p.py') for now it does nothing TODO - make an optimized version
-        #LAYOUT = "{!s:16} {!s:16} {!s:16} {!s:16}"
-        #print(LAYOUT.format("Max Temperature", "Min Temperature", "Alpha", "Iteration Number"))
-        #print(LAYOUT.format(*opt_pars))
+        LAYOUT = "{!s:16} {!s:16} {!s:16} {!s:16}"
+        print(LAYOUT.format("Max Temperature", "Min Temperature", "Alpha", "Iteration Number"))
+        print(LAYOUT.format(*opt_pars))
 
         sol = SA_solve.solve(curr_data, pars)
         labs = ["best solution","time"]
@@ -349,7 +349,7 @@ class SAFrame(wx.Frame):
         ''' Plot the graph so the order of visited points correspondes with the solution'''
         pl = wxmplot.PlotPanel(self.opt_graph, size=(300,215), dpi=100, fontsize=9)
         pl.clear()
-        plot_data = np.zeros((250, 2))
+        plot_data = np.zeros((10, 2))
         j = 0
         for i in sol[0]:
             plot_data[j, 0] = curr_data[i, 0]
@@ -360,7 +360,6 @@ class SAFrame(wx.Frame):
         opt_bench = ' Benchmarking is here '
         self.opt_par.some_text = wx.StaticText(self.opt_graph, label= str(opt_bench),
                                                size=(230,70), style=wx.ALIGN_CENTER, pos=(350,50))
-
 
 app = wx.App(False)  # does not redirects stdout to a window
 frame = SAFrame(None)  # frame is the top level window

@@ -123,10 +123,10 @@ class SAFrame(wx.Frame):
 
         fgSizer4.Add(self.init_graph, 1, wx.EXPAND | wx.ALL, 5)
 
-        self.tspdata = wx.grid.Grid(sbSizer9.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, 0)
+        self.tspdata = wx.grid.Grid(sbSizer9.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(240, 220), wx.VSCROLL)
 
         ''' set up the Grid for TSP data '''
-        self.tspdata.CreateGrid(10, 2)
+        self.tspdata.CreateGrid(25, 2)
         self.tspdata.EnableEditing(True)
         self.tspdata.EnableGridLines(True)
         self.tspdata.SetGridLineColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT))
@@ -147,7 +147,7 @@ class SAFrame(wx.Frame):
 
         # Rows
         self.tspdata.EnableDragRowSize(True)
-        self.tspdata.SetRowLabelSize(80)
+        self.tspdata.SetRowLabelSize(63)
         self.tspdata.SetRowLabelAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
 
         # Label Appearance
@@ -231,7 +231,7 @@ class SAFrame(wx.Frame):
 
     global pars, opt_pars, curr_data
     pars = opt_pars = [0, 0, 0, 0]
-    curr_data = np.zeros((10,2))
+    curr_data = np.zeros((25,2))
 
     def __del__(self):
         pass
@@ -280,7 +280,7 @@ class SAFrame(wx.Frame):
         ''' Plot the graph so the order of visited points correspondes with the solution'''
         pl = wxmplot.PlotPanel(self.init_graph, size=(300,215), dpi=100, fontsize=9)
         pl.clear()
-        plot_data = np.zeros((10, 2))
+        plot_data = np.zeros((25, 2))
         j = 0
         for i in sol[0]:
             plot_data[j, 0] = curr_data[i, 0]
@@ -297,12 +297,9 @@ class SAFrame(wx.Frame):
         headers = [self.tspdata.GetColLabelValue(0), self.tspdata.GetColLabelValue(1)]
         col_num = self.tspdata.GetNumberCols()
         row_num = self.tspdata.GetNumberRows()
-        print(headers)
-        df = np.zeros((row_num, col_num))
         for i in range(row_num):
             for j in range(col_num):
-                df[i][j] = self.tspdata.GetCellValue(i, j)
-                curr_data[i][j] = df[i][j]
+                curr_data[i][j] = self.tspdata.GetCellValue(i, j)
 
         pl = wxmplot.PlotPanel(self.init_graph, size=(300,215), dpi=100, fontsize=9)
         pl.clear()
@@ -340,16 +337,16 @@ class SAFrame(wx.Frame):
         print(LAYOUT.format(*opt_pars))
 
         sol = SA_solve.solve(curr_data, pars)
-        labs = ["best solution","time"]
+        labs = ["best solution", "time"]
         sols = [labs[0], str(sol[0]), labs[1], str(sol[1])]
-        self.opt_sol.some_text = wx.StaticText(self.opt_sol, label= str(sols), size=(230,70), style=wx.ALIGN_CENTER)
+        self.opt_sol.some_text = wx.StaticText(self.opt_sol, label=str(sols), size=(230, 70), style=wx.ALIGN_CENTER)
 
-        self.opt_par.some_text = wx.StaticText(self.opt_par, label= str(opt_pars), size=(230,70), style=wx.ALIGN_CENTER)
+        self.opt_par.some_text = wx.StaticText(self.opt_par, label=str(opt_pars), size=(230, 70), style=wx.ALIGN_CENTER)
 
         ''' Plot the graph so the order of visited points correspondes with the solution'''
         pl = wxmplot.PlotPanel(self.opt_graph, size=(300,215), dpi=100, fontsize=9)
         pl.clear()
-        plot_data = np.zeros((10, 2))
+        plot_data = np.zeros((25, 2))
         j = 0
         for i in sol[0]:
             plot_data[j, 0] = curr_data[i, 0]

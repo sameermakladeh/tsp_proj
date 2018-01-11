@@ -366,7 +366,7 @@ app = wx.App(False)  # does not redirects stdout to a window
 frame = SAFrame(None)  # frame is the top level window
 
 ''' inspect the layout if needed '''
-import wx.lib.inspection as wxli
-wxli.InspectionTool().Show()
+#import wx.lib.inspection as wxli
+#wxli.InspectionTool().Show()
 
 app.MainLoop()

@@ -9,6 +9,7 @@ import wxmplot
 import pandas
 from tkinter.filedialog import askopenfile
 
+
 class SAFrame(wx.Frame):
     # derive from frame a new class
     def __init__(self, parent):
@@ -216,11 +217,19 @@ class SAFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_open, id=self.open_file.GetId())
         self.Bind(wx.EVT_MENU, self.on_save, id=self.save_file.GetId())
         self.Bind(wx.EVT_MENU, self.on_exit, id=self.exit.GetId())
-        self.Bind(wx.EVT_MENU, self.on_About, id=self.info.GetId())
+        self.Bind(wx.EVT_MENU, self.on_about, id=self.info.GetId())
         self.max_tmp.Bind(wx.EVT_TEXT, self.on_maxtemp)
+        self.max_tmp.Bind(wx.EVT_ENTER_WINDOW, self.on_hover_maxtmp)
+        self.max_tmp.Bind(wx.EVT_LEAVE_WINDOW, self.on_leave_maxtmp)
         self.min_tmp.Bind(wx.EVT_TEXT, self.on_mintemp)
+        self.min_tmp.Bind(wx.EVT_ENTER_WINDOW, self.on_hover_mintmp)
+        self.min_tmp.Bind(wx.EVT_LEAVE_WINDOW, self.on_leave_mintmp)
         self.m_alph.Bind(wx.EVT_TEXT, self.on_alpha)
+        self.m_alph.Bind(wx.EVT_ENTER_WINDOW, self.on_hover_alpha)
+        self.m_alph.Bind(wx.EVT_LEAVE_WINDOW, self.on_leave_alpha)
         self.iter_num.Bind(wx.EVT_TEXT, self.on_iteration)
+        self.iter_num.Bind(wx.EVT_ENTER_WINDOW, self.on_hover_iter)
+        self.iter_num.Bind(wx.EVT_LEAVE_WINDOW, self.on_leave_iter)
         self.solvit.Bind(wx.EVT_BUTTON, self.on_solvit)
         self.solvit.Bind(wx.EVT_ENTER_WINDOW, self.on_hover_solvit)
         self.solvit.Bind(wx.EVT_LEAVE_WINDOW, self.on_leave_solvit)
@@ -244,29 +253,6 @@ class SAFrame(wx.Frame):
         pass
 
     ''' define Events '''
-    def on_hover_solvit(self, event):
-        self.m_statusBar.SetStatusText(" Solve the given TSP using SA algorithm ")
-
-    def on_leave_solvit(self, event):
-        self.m_statusBar.SetStatusText("")
-
-    def on_hover_optimize(self, event):
-        self.m_statusBar.SetStatusText(" Solve given TSP with an optimized version of SA  ")
-
-    def on_leave_optimize(self, event):
-        self.m_statusBar.SetStatusText("")
-
-    def on_hover_imdata(self, event):
-        self.m_statusBar.SetStatusText(" Fast import of data using 'tsp.xlsx' file ")
-
-    def on_leave_imdata(self, event):
-        self.m_statusBar.SetStatusText("")
-
-    def on_hover_exdata(self, event):
-        self.m_statusBar.SetStatusText(" not working yet (if at all :] ) ")
-
-    def on_leave_exdata(self, event):
-        self.m_statusBar.SetStatusText("")
 
     def on_open(self, event):
         ''' Chose file to open, must be excel '''
@@ -297,7 +283,7 @@ class SAFrame(wx.Frame):
     def on_exit(self, event):
         self.Close(True)
 
-    def on_About(self, event):
+    def on_about(self, event):
         # show a dialog with OK button
         dlg = wx.MessageDialog(self, "This programs enables the user to input a TSP as a problem on XY axis, "
                                      "and using Simulated Annealing algorithm parameters that the user enters the "
@@ -306,7 +292,6 @@ class SAFrame(wx.Frame):
                                      " results.", "About the program and SA", wx.OK)
         dlg.ShowModal()
         dlg.Destroy()
-
 
     def on_maxtemp(self, event):
         pars[0] = float(self.max_tmp.GetValue())
@@ -357,7 +342,6 @@ class SAFrame(wx.Frame):
                        ymax=max(curr_data[:, 1])*1.15, xmin=min(min(curr_data[:, 0])*1.1, 0),
                        ymin=min(min(curr_data[:, 1])*1.15,0))
 
-
     def onimdata(self, event):
         ''' Fast importing of a file named 'tsp.xlsx' '''
 
@@ -373,14 +357,12 @@ class SAFrame(wx.Frame):
         pl = wxmplot.PlotPanel(self.init_graph, size=(300, 215), dpi=100, fontsize=9)
         pl.clear()
         # Not sure why i need to provide limits but it wont work without!! :@
-        pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=15, xmax=max(curr_data[:, 0]) * 1.1,
+        pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=2, xmax=max(curr_data[:, 0]) * 1.1,
                        ymax=max(curr_data[:, 1]) * 1.15, xmin=min(min(curr_data[:, 0]) * 1.1, 0),
                        ymin=min(min(curr_data[:, 1]) * 1.15, 0))
 
-
     def onexdata(self, event):
         event.Skip()
-
 
     def on_optimize(self, event):
         # TODO - make an optimized version
@@ -406,9 +388,60 @@ class SAFrame(wx.Frame):
             j += 1
         pl.plot(plot_data[:, 0], plot_data[:, 1], marker='o')
 
-        opt_bench = ' Benchmarking is here '
+        opt_bench = ' Benchmarking will be displayed here '
         self.opt_par.some_text = wx.StaticText(self.opt_graph, label= str(opt_bench),
                                                size=(230,70), style=wx.ALIGN_CENTER, pos=(350,50))
+
+    def on_hover_solvit(self, event):
+        self.m_statusBar.SetStatusText(" Solve the given TSP using SA algorithm ")
+
+    def on_leave_solvit(self, event):
+        self.m_statusBar.SetStatusText("")
+
+    def on_hover_optimize(self, event):
+        self.m_statusBar.SetStatusText(" Solve given TSP with an optimized version of SA  ")
+
+    def on_leave_optimize(self, event):
+        self.m_statusBar.SetStatusText("")
+
+    def on_hover_imdata(self, event):
+        self.m_statusBar.SetStatusText(" Fast import of data using 'tsp.xlsx' file ")
+
+    def on_leave_imdata(self, event):
+        self.m_statusBar.SetStatusText("")
+
+    def on_hover_exdata(self, event):
+        self.m_statusBar.SetStatusText(" not working yet (if at all :] ) ")
+
+    def on_leave_exdata(self, event):
+        self.m_statusBar.SetStatusText("")
+
+    def on_hover_maxtmp(self, event):
+        self.m_statusBar.SetStatusText(" Enter desired Initial temperature of SA algorithm ")
+
+    def on_leave_maxtmp(self, event):
+        self.m_statusBar.SetStatusText("")
+
+    def on_hover_mintmp(self, event):
+        self.m_statusBar.SetStatusText(" Enter desired Minimal temperature of SA algorithm ")
+
+    def on_leave_mintmp(self, event):
+        self.m_statusBar.SetStatusText("")
+
+    def on_hover_alpha(self, event):
+        self.m_statusBar.SetStatusText(" Enter desired Decay variable of SA algorithm ")
+
+    def on_leave_alpha(self, event):
+        self.m_statusBar.SetStatusText("")
+
+    def on_hover_iter(self, event):
+        self.m_statusBar.SetStatusText(" Enter desired Number of iterations for each cycle of SA algorithm ")
+
+    def on_leave_iter(self, event):
+        self.m_statusBar.SetStatusText("")
+
+    ''' End of event handling'''
+
 
 app = wx.App(False)  # does not redirects stdout to a window
 frame = SAFrame(None)  # frame is the top level window

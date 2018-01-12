@@ -7,7 +7,7 @@ import SA_solve
 import numpy as np
 import wxmplot
 import pandas
-
+from tkinter.filedialog import askopenfile
 
 class SAFrame(wx.Frame):
     # derive from frame a new class
@@ -222,10 +222,18 @@ class SAFrame(wx.Frame):
         self.m_alph.Bind(wx.EVT_TEXT, self.on_alpha)
         self.iter_num.Bind(wx.EVT_TEXT, self.on_iteration)
         self.solvit.Bind(wx.EVT_BUTTON, self.on_solvit)
+        self.solvit.Bind(wx.EVT_ENTER_WINDOW, self.on_hover_solvit)
+        self.solvit.Bind(wx.EVT_LEAVE_WINDOW, self.on_leave_solvit)
         self.tspdata.Bind(wx.grid.EVT_GRID_CELL_CHANGED, self.on_change_data)
         self.imdata.Bind(wx.EVT_BUTTON, self.onimdata)
+        self.imdata.Bind(wx.EVT_ENTER_WINDOW, self.on_hover_imdata)
+        self.imdata.Bind(wx.EVT_LEAVE_WINDOW, self.on_leave_imdata)
         self.exdata.Bind(wx.EVT_BUTTON, self.onexdata)
+        self.exdata.Bind(wx.EVT_ENTER_WINDOW, self.on_hover_exdata)
+        self.exdata.Bind(wx.EVT_LEAVE_WINDOW, self.on_leave_exdata)
         self.optimize.Bind(wx.EVT_BUTTON, self.on_optimize)
+        self.optimize.Bind(wx.EVT_ENTER_WINDOW, self.on_hover_optimize)
+        self.optimize.Bind(wx.EVT_LEAVE_WINDOW, self.on_leave_optimize)
         self.Show()
 
     global pars, opt_pars, curr_data
@@ -236,9 +244,52 @@ class SAFrame(wx.Frame):
         pass
 
     ''' define Events '''
+    def on_hover_solvit(self, event):
+        self.m_statusBar.SetStatusText(" Solve the given TSP using SA algorithm ")
+
+    def on_leave_solvit(self, event):
+        self.m_statusBar.SetStatusText("")
+
+    def on_hover_optimize(self, event):
+        self.m_statusBar.SetStatusText(" Solve given TSP with an optimized version of SA  ")
+
+    def on_leave_optimize(self, event):
+        self.m_statusBar.SetStatusText("")
+
+    def on_hover_imdata(self, event):
+        self.m_statusBar.SetStatusText(" Fast import of data using 'tsp.xlsx' file ")
+
+    def on_leave_imdata(self, event):
+        self.m_statusBar.SetStatusText("")
+
+    def on_hover_exdata(self, event):
+        self.m_statusBar.SetStatusText(" not working yet (if at all :] ) ")
+
+    def on_leave_exdata(self, event):
+        self.m_statusBar.SetStatusText("")
 
     def on_open(self, event):
-        event.Skip()
+        ''' Chose file to open, must be excel '''
+        wildcard = "Excel Files (*.xlsx)|*.xlsx"
+        openFileDialog = wx.FileDialog(frame, "Open", "", "",wildcard= wildcard,
+                                       style= wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+        openFileDialog.ShowModal()
+        d_file = pandas.read_excel(openFileDialog.GetFilename())
+
+        col_names = d_file.columns
+        col_data = d_file.values
+        for i in range(len(col_data[:, 0])):
+            for j in range(2):
+                self.tspdata.SetCellValue(i, j, str(col_data[i][j]))
+                self.tspdata.SetCellEditor(i, j, wx.grid.GridCellFloatEditor())
+                curr_data[i][j] = self.tspdata.GetCellValue(i, j)
+
+        pl = wxmplot.PlotPanel(self.init_graph, size=(300, 215), dpi=100, fontsize=9)
+        pl.clear()
+        # Not sure why i need to provide limits but it wont work without!! :@
+        pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=2, xmax=max(curr_data[:, 0]) * 1.1,
+                       ymax=max(curr_data[:, 1]) * 1.15, xmin=min(min(curr_data[:, 0]) * 1.1, 0),
+                       ymin=min(min(curr_data[:, 1]) * 1.15, 0))
 
     def on_save(self, event):
         event.Skip()
@@ -276,7 +327,7 @@ class SAFrame(wx.Frame):
         sols = [labs[0], str(sol[1]), labs[1], str(sol[2])]
         self.init_sol.some_text = wx.StaticText(self.init_sol, label= str(sols), size=(220,60), style=wx.ALIGN_CENTER)
 
-        ''' Plot the graph so the order of visited points correspondes with the solution'''
+        ''' Plot the graph so the order of visited points corresponds with the solution'''
         pl = wxmplot.PlotPanel(self.init_graph, size=(300,215), dpi=100, fontsize=9)
         pl.clear()
         plot_data = np.zeros((25, 2))
@@ -285,7 +336,7 @@ class SAFrame(wx.Frame):
             plot_data[j, 0] = curr_data[i, 0]
             plot_data[j, 1] = curr_data[i, 1]
             j += 1
-        pl.plot(plot_data[:, 0], plot_data[:, 1])
+        pl.plot(plot_data[:, 0], plot_data[:, 1], marker='o')
 
 
         #LAYOUT = "{!s:16} {!s:16} {!s:16} {!s:16}"
@@ -302,12 +353,14 @@ class SAFrame(wx.Frame):
         pl = wxmplot.PlotPanel(self.init_graph, size=(300,215), dpi=100, fontsize=9)
         pl.clear()
         # Not sure why i need to provide limits but it wont work without!! :@
-        pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=15, xmax=max(curr_data[:, 0])*1.1,
+        pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=2, xmax=max(curr_data[:, 0])*1.1,
                        ymax=max(curr_data[:, 1])*1.15, xmin=min(min(curr_data[:, 0])*1.1, 0),
                        ymin=min(min(curr_data[:, 1])*1.15,0))
 
 
     def onimdata(self, event):
+        ''' Fast importing of a file named 'tsp.xlsx' '''
+
         d_file = pandas.read_excel('tsp.xlsx')
         col_names = d_file.columns
         col_data = d_file.values
@@ -328,8 +381,9 @@ class SAFrame(wx.Frame):
     def onexdata(self, event):
         event.Skip()
 
+
     def on_optimize(self, event):
-        # os.system('optimize_p.py') for now it does nothing TODO - make an optimized version
+        # TODO - make an optimized version
         #LAYOUT = "{!s:16} {!s:16} {!s:16} {!s:16}"
         #print(LAYOUT.format("Max Temperature", "Min Temperature", "Alpha", "Iteration Number"))
         #print(LAYOUT.format(*opt_pars))
@@ -350,7 +404,7 @@ class SAFrame(wx.Frame):
             plot_data[j, 0] = curr_data[i, 0]
             plot_data[j, 1] = curr_data[i, 1]
             j += 1
-        pl.plot(plot_data[:, 0], plot_data[:, 1])
+        pl.plot(plot_data[:, 0], plot_data[:, 1], marker='o')
 
         opt_bench = ' Benchmarking is here '
         self.opt_par.some_text = wx.StaticText(self.opt_graph, label= str(opt_bench),

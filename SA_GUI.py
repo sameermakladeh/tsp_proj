@@ -51,10 +51,10 @@ class SAFrame(wx.Frame):
         fgSizer1.SetFlexibleDirection(wx.BOTH)
         fgSizer1.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_ALL)
 
-        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)  # Add spacer pos. 1-5
-        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)
-        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)
-        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)
+        fgSizer1.Add((self.GetSize()[0] * 0.1, self.GetSize()[1] * 0.1), 1, wx.EXPAND, 5)  # Add spacer pos. 1-5
+        fgSizer1.Add((self.GetSize()[0] * 0.1, self.GetSize()[1] * 0.1), 1, wx.EXPAND, 5)
+        fgSizer1.Add((self.GetSize()[0] * 0.1, self.GetSize()[1] * 0.1), 1, wx.EXPAND, 5)
+        fgSizer1.Add((self.GetSize()[0] * 0.1, self.GetSize()[1] * 0.1), 1, wx.EXPAND, 5)
         fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)
 
         sbSizer5 = wx.StaticBoxSizer(wx.StaticBox(self, wx.ID_ANY, u"Parameters"), wx.VERTICAL)

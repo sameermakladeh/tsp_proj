@@ -14,9 +14,10 @@ class SAFrame(wx.Frame):
     # derive from frame a new class
     def __init__(self, parent):
         wx.Frame.__init__(self, parent, id=wx.ID_ANY, title='SA thingy', pos=wx.DefaultPosition,
-                          size=wx.Size(840, 600), style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
+                          size=wx.Size(-1, -1), style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL | wx.ALIGN_CENTRE)
 
         self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
+        self.SetAutoLayout(True)
 
         '''' set up Menu'''
         self.m_menubar = wx.MenuBar(0)
@@ -46,13 +47,15 @@ class SAFrame(wx.Frame):
         self.m_statusBar = self.CreateStatusBar(1, wx.STB_SIZEGRIP, wx.ID_ANY)
 
         ''' set up sizer for GUI layout '''
-        fgSizer1 = wx.FlexGridSizer(0, 2, 0, 0)
+        fgSizer1 = wx.FlexGridSizer(0, 4, 0, 0)
         fgSizer1.SetFlexibleDirection(wx.BOTH)
-        fgSizer1.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_SPECIFIED)
+        fgSizer1.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_ALL)
 
-        fgSizer1 = wx.FlexGridSizer(0, 2, 0, 0)
-        fgSizer1.SetFlexibleDirection(wx.BOTH)
-        fgSizer1.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_SPECIFIED)
+        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)  # Add spacer pos. 1-5
+        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)
+        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)
+        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)
+        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)
 
         sbSizer5 = wx.StaticBoxSizer(wx.StaticBox(self, wx.ID_ANY, u"Parameters"), wx.VERTICAL)
 
@@ -60,45 +63,45 @@ class SAFrame(wx.Frame):
 
         self.max_tmp = wx.TextCtrl(sbSizer5.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.Point(-1, -1), wx.DefaultSize,
                                    0)
-        gSizer3.Add(self.max_tmp, 0, wx.ALL, 5)
+        gSizer3.Add(self.max_tmp, 0, wx.ALL | wx.EXPAND, 5)
 
         self.maxTemp = wx.StaticText(sbSizer5.GetStaticBox(), wx.ID_ANY, u"Max Temperature", wx.DefaultPosition,
                                      wx.DefaultSize, 0)
         self.maxTemp.Wrap(-1)
-        gSizer3.Add(self.maxTemp, 0, wx.ALL, 5)
+        gSizer3.Add(self.maxTemp, 0, wx.ALL | wx.EXPAND, 5)
 
         self.min_tmp = wx.TextCtrl(sbSizer5.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition,
                                    wx.DefaultSize, 0)
-        gSizer3.Add(self.min_tmp, 0, wx.ALL, 5)
+        gSizer3.Add(self.min_tmp, 0, wx.ALL | wx.EXPAND, 5)
 
         self.MinTemp = wx.StaticText(sbSizer5.GetStaticBox(), wx.ID_ANY, u"Min Temperature", wx.DefaultPosition,
                                      wx.DefaultSize, 0)
         self.MinTemp.Wrap(-1)
-        gSizer3.Add(self.MinTemp, 0, wx.ALL, 5)
+        gSizer3.Add(self.MinTemp, 0, wx.ALL | wx.EXPAND, 5)
 
         self.m_alph = wx.TextCtrl(sbSizer5.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition,
                                   wx.DefaultSize, 0)
-        gSizer3.Add(self.m_alph, 0, wx.ALL, 5)
+        gSizer3.Add(self.m_alph, 0, wx.ALL | wx.EXPAND, 5)
 
         self.alpha = wx.StaticText(sbSizer5.GetStaticBox(), wx.ID_ANY, u"Alpha", wx.DefaultPosition, wx.DefaultSize, 0)
         self.alpha.Wrap(-1)
-        gSizer3.Add(self.alpha, 0, wx.ALL, 5)
+        gSizer3.Add(self.alpha, 0, wx.ALL | wx.EXPAND, 5)
 
         self.iter_num = wx.TextCtrl(sbSizer5.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition,
                                     wx.DefaultSize, 0)
-        gSizer3.Add(self.iter_num, 0, wx.ALL, 5)
+        gSizer3.Add(self.iter_num, 0, wx.ALL | wx.EXPAND, 5)
 
         self.iterations = wx.StaticText(sbSizer5.GetStaticBox(), wx.ID_ANY, u"Iteration Number", wx.DefaultPosition,
                                         wx.DefaultSize, 0)
         self.iterations.Wrap(-1)
-        gSizer3.Add(self.iterations, 0, wx.ALL, 5)
+        gSizer3.Add(self.iterations, 0, wx.ALL | wx.EXPAND, 5)
 
         sbSizer5.Add(gSizer3, 1, wx.EXPAND, 5)
 
         sbSizer11 = wx.StaticBoxSizer(wx.StaticBox(sbSizer5.GetStaticBox(), wx.ID_ANY, u"label"), wx.VERTICAL)
 
         self.solvit = wx.Button(sbSizer11.GetStaticBox(), wx.ID_ANY, u"Solve!", wx.DefaultPosition, wx.DefaultSize, 0)
-        sbSizer11.Add(self.solvit, 0, wx.ALL, 5)
+        sbSizer11.Add(self.solvit, 0, wx.ALL | wx.ALIGN_CENTRE, 5)
 
         self.init_sol = wx.Panel(sbSizer11.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(-1, -1),
                                  wx.TAB_TRAVERSAL)
@@ -114,16 +117,17 @@ class SAFrame(wx.Frame):
 
         fgSizer4 = wx.FlexGridSizer(0, 2, 0, 0)
         fgSizer4.SetFlexibleDirection(wx.BOTH)
-        fgSizer4.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_SPECIFIED)
+        fgSizer4.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_ALL)
 
         ''' Graph initial data '''
-        self.init_graph = wx.Panel(sbSizer9.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(300, 50),
+        self.init_graph = wx.Panel(sbSizer9.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(-1, -1),
                                    wx.TAB_TRAVERSAL)
         self.init_graph.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNHIGHLIGHT))
+        self.init_graph.SetMinSize(wx.Size(500, 300))
 
         fgSizer4.Add(self.init_graph, 1, wx.EXPAND | wx.ALL, 5)
 
-        self.tspdata = wx.grid.Grid(sbSizer9.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(240, 220), wx.VSCROLL)
+        self.tspdata = wx.grid.Grid(sbSizer9.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(-1, -1), wx.VSCROLL)
 
         ''' set up the Grid for TSP data '''
         self.tspdata.CreateGrid(25, 2)
@@ -155,9 +159,10 @@ class SAFrame(wx.Frame):
 
         # Cell Defaults
         self.tspdata.SetDefaultCellAlignment(wx.ALIGN_CENTRE, wx.ALIGN_CENTRE)
-        fgSizer4.Add(self.tspdata, 0, wx.ALIGN_TOP | wx.LEFT | wx.RIGHT | wx.TOP, 5)
+        self.tspdata.SetMinSize(wx.Size(240, 240))
+        fgSizer4.Add(self.tspdata, 0, wx.ALIGN_TOP | wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, 5)
 
-        ''' sizers configure '''
+        ''' Sizer configure - extra '''
         self.m_panel22 = wx.Panel(sbSizer9.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
                                   wx.TAB_TRAVERSAL)
         fgSizer4.Add(self.m_panel22, 1, wx.EXPAND | wx.ALL, 5)
@@ -166,11 +171,11 @@ class SAFrame(wx.Frame):
 
         self.imdata = wx.Button(sbSizer9.GetStaticBox(), wx.ID_ANY, u"Import Data", wx.DefaultPosition, wx.DefaultSize,
                                 0)
-        gSizer7.Add(self.imdata, 0, wx.ALL, 5)
+        gSizer7.Add(self.imdata, 0, wx.ALL | wx.ALIGN_CENTRE, 5)
 
         self.exdata = wx.Button(sbSizer9.GetStaticBox(), wx.ID_ANY, u"Export Data", wx.DefaultPosition, wx.DefaultSize,
                                 0)
-        gSizer7.Add(self.exdata, 0, wx.ALL, 5)
+        gSizer7.Add(self.exdata, 0, wx.ALL | wx.ALIGN_CENTRE, 5)
 
         fgSizer4.Add(gSizer7, 1, wx.EXPAND, 5)
 
@@ -178,13 +183,16 @@ class SAFrame(wx.Frame):
 
         fgSizer1.Add(sbSizer9, 1, wx.EXPAND, 5)
 
+        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)  # Add spacer pos. 8-9
+        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)
+
         sbSizer6 = wx.StaticBoxSizer(wx.StaticBox(self, wx.ID_ANY, u"Optimization"), wx.VERTICAL)
 
         self.optimize = wx.Button(sbSizer6.GetStaticBox(), wx.ID_ANY, u"Optimize!", wx.DefaultPosition, wx.DefaultSize,
                                   0)
-        sbSizer6.Add(self.optimize, 0, wx.ALL, 5)
+        sbSizer6.Add(self.optimize, 0, wx.ALL | wx.ALIGN_CENTRE, 5)
 
-        self.opt_sol = wx.Panel(sbSizer6.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(50, 50),
+        self.opt_sol = wx.Panel(sbSizer6.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
                                 wx.TAB_TRAVERSAL)
         self.opt_sol.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_HIGHLIGHT))
 
@@ -200,24 +208,32 @@ class SAFrame(wx.Frame):
 
         sbSizer10 = wx.StaticBoxSizer(wx.StaticBox(self, wx.ID_ANY, u"Opt. graph"), wx.VERTICAL)
 
-        self.opt_graph = wx.Panel(sbSizer10.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(300, 200),
+        self.opt_graph = wx.Panel(sbSizer10.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(-1, -1),
                                   wx.TAB_TRAVERSAL)
         self.opt_graph.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNHIGHLIGHT))
+        self.opt_graph.SetMinSize(wx.Size(500, 300))
 
         sbSizer10.Add(self.opt_graph, 1, wx.EXPAND | wx.ALL, 5)
 
-        fgSizer1.Add(sbSizer10, 1, wx.EXPAND, 5)
+        fgSizer1.Add(sbSizer10, 1, wx.CENTRE | wx.EXPAND, 5)
 
-        self.SetSizer(fgSizer1)
-        self.Layout()
+        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)  # Add spacer pos. 12-16
+        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)
+        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)
+        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)
+        fgSizer1.Add((self.GetSize()[0] * 0.2, self.GetSize()[1] * 0.2), 1, wx.EXPAND, 5)
 
+
+        self.SetSizerAndFit(fgSizer1)
         self.Centre(wx.BOTH)
+
 
         ''' Connect events '''
         self.Bind(wx.EVT_MENU, self.on_open, id=self.open_file.GetId())
         self.Bind(wx.EVT_MENU, self.on_save, id=self.save_file.GetId())
         self.Bind(wx.EVT_MENU, self.on_exit, id=self.exit.GetId())
         self.Bind(wx.EVT_MENU, self.on_about, id=self.info.GetId())
+        self.Bind(wx.EVT_SIZE, self.on_size)
         self.max_tmp.Bind(wx.EVT_TEXT, self.on_maxtemp)
         self.max_tmp.Bind(wx.EVT_ENTER_WINDOW, self.on_hover_maxtmp)
         self.max_tmp.Bind(wx.EVT_LEAVE_WINDOW, self.on_leave_maxtmp)
@@ -270,7 +286,7 @@ class SAFrame(wx.Frame):
                 self.tspdata.SetCellEditor(i, j, wx.grid.GridCellFloatEditor())
                 curr_data[i][j] = self.tspdata.GetCellValue(i, j)
 
-        pl = wxmplot.PlotPanel(self.init_graph, size=(300, 215), dpi=100, fontsize=9)
+        pl = wxmplot.PlotPanel(self.init_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
         pl.clear()
         # Not sure why i need to provide limits but it wont work without!! :@
         pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=2, xmax=max(curr_data[:, 0]) * 1.1,
@@ -308,12 +324,14 @@ class SAFrame(wx.Frame):
     def on_solvit(self, event):
         # TODO change calling SA_solve to calling it with TSP and paramaters
         sol = SA_solve.solve(curr_data, pars)
-        labs = ["best value", "time"]
-        sols = [labs[0], str(sol[1]), labs[1], str(sol[2])]
-        self.init_sol.some_text = wx.StaticText(self.init_sol, label= str(sols), size=(220,60), style=wx.ALIGN_CENTER)
+        labs = ["best value: ", "time: ", "start: "]
+        sols = [labs[0], str(sol[1]), labs[1], str(sol[2]), labs[2], str(curr_data[sol[0][0]])]  # show starting point
+        self.init_sol.some_text = wx.StaticText(self.init_sol, label=str(sols[0:2]) + '\n' + str(sols[2:4]) +
+                                                '\n' + str(sols[4:6]),
+                                                size=wx.Panel.GetSize(self.init_sol), style=wx.ALIGN_CENTER)
 
         ''' Plot the graph so the order of visited points corresponds with the solution'''
-        pl = wxmplot.PlotPanel(self.init_graph, size=(300,215), dpi=100, fontsize=9)
+        pl = wxmplot.PlotPanel(self.init_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
         pl.clear()
         plot_data = np.zeros((25, 2))
         j = 0
@@ -335,7 +353,7 @@ class SAFrame(wx.Frame):
             for j in range(col_num):
                 curr_data[i][j] = self.tspdata.GetCellValue(i, j)
 
-        pl = wxmplot.PlotPanel(self.init_graph, size=(300,215), dpi=100, fontsize=9)
+        pl = wxmplot.PlotPanel(self.init_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
         pl.clear()
         # Not sure why i need to provide limits but it wont work without!! :@
         pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=2, xmax=max(curr_data[:, 0])*1.1,
@@ -354,7 +372,7 @@ class SAFrame(wx.Frame):
                 self.tspdata.SetCellEditor(i, j, wx.grid.GridCellFloatEditor())
                 curr_data[i][j] = self.tspdata.GetCellValue(i, j)
 
-        pl = wxmplot.PlotPanel(self.init_graph, size=(300, 215), dpi=100, fontsize=9)
+        pl = wxmplot.PlotPanel(self.init_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
         pl.clear()
         # Not sure why i need to provide limits but it wont work without!! :@
         pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=2, xmax=max(curr_data[:, 0]) * 1.1,
@@ -371,14 +389,16 @@ class SAFrame(wx.Frame):
         #print(LAYOUT.format(*opt_pars))
 
         sol = SA_solve.solve(curr_data, pars)
-        labs = ["best value", "time"]
-        sols = [labs[0], str(sol[1]), labs[1], str(sol[2])]
-        self.opt_sol.some_text = wx.StaticText(self.opt_sol, label=str(sols), size=(230, 70), style=wx.ALIGN_CENTER)
+        labs = ["best value: ", "time: ", "start: "]
+        sols = [labs[0], str(sol[1]), labs[1], str(sol[2]), labs[2], str(curr_data[sol[0][0]])]  # show starting point
+        self.opt_sol.some_text = wx.StaticText(self.opt_sol, label=str(sols[0:2]) + '\n' + str(sols[2:4]) +
+                                                '\n' + str(sols[4:6]),
+                                                size=wx.Panel.GetSize(self.opt_sol), style=wx.ALIGN_CENTER)
 
-        self.opt_par.some_text = wx.StaticText(self.opt_par, label=str(opt_pars), size=(230, 70), style=wx.ALIGN_CENTER)
+        self.opt_par.some_text = wx.StaticText(self.opt_par, label=str(opt_pars), size=wx.Panel.GetSize(self.opt_par), style=wx.ALIGN_CENTER)
 
         ''' Plot the graph so the order of visited points correspondes with the solution'''
-        pl = wxmplot.PlotPanel(self.opt_graph, size=(300,215), dpi=100, fontsize=9)
+        pl = wxmplot.PlotPanel(self.opt_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
         pl.clear()
         plot_data = np.zeros((25, 2))
         j = 0
@@ -389,8 +409,12 @@ class SAFrame(wx.Frame):
         pl.plot(plot_data[:, 0], plot_data[:, 1], marker='o')
 
         opt_bench = ' Benchmarking will be displayed here '
-        self.opt_par.some_text = wx.StaticText(self.opt_graph, label= str(opt_bench),
-                                               size=(230,70), style=wx.ALIGN_CENTER, pos=(350,50))
+        self.opt_par.some_text = wx.StaticText(self.opt_graph, label=str(opt_bench),
+                                               size=wx.Panel.GetSize(self.init_sol), style=wx.CENTER,
+                                               pos=(wx.Panel.GetSize(self.init_graph)[0], 0))
+
+    def on_size(self, event):
+        self.Fit()  # Prevent expansion
 
     def on_hover_solvit(self, event):
         self.m_statusBar.SetStatusText(" Solve the given TSP using SA algorithm ")

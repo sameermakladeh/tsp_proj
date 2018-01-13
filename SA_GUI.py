@@ -51,11 +51,11 @@ class SAFrame(wx.Frame):
         fgSizer1.SetFlexibleDirection(wx.BOTH)
         fgSizer1.SetNonFlexibleGrowMode(wx.FLEX_GROWMODE_ALL)
 
-        fgSizer1.Add((self.GetSize()[0] * 0.1, self.GetSize()[1] * 0.07), 1, wx.EXPAND, 5)  # Add spacer pos. 1-5
-        fgSizer1.Add((self.GetSize()[0] * 0.1, self.GetSize()[1] * 0.07), 1, wx.EXPAND, 5)
-        fgSizer1.Add((self.GetSize()[0] * 0.1, self.GetSize()[1] * 0.07), 1, wx.EXPAND, 5)
-        fgSizer1.Add((self.GetSize()[0] * 0.1, self.GetSize()[1] * 0.07), 1, wx.EXPAND, 5)
-        fgSizer1.Add((self.GetSize()[0] * 0.07, self.GetSize()[1] * 0.1), 1, wx.EXPAND, 5)
+        fgSizer1.Add((self.GetSize()[0] * 0.1, self.GetSize()[1] * 0.06), 1, wx.EXPAND, 5)  # Add spacer pos. 1-5
+        fgSizer1.Add((self.GetSize()[0] * 0.1, self.GetSize()[1] * 0.06), 1, wx.EXPAND, 5)
+        fgSizer1.Add((self.GetSize()[0] * 0.1, self.GetSize()[1] * 0.06), 1, wx.EXPAND, 5)
+        fgSizer1.Add((self.GetSize()[0] * 0.1, self.GetSize()[1] * 0.06), 1, wx.EXPAND, 5)
+        fgSizer1.Add((self.GetSize()[0] * 0.06, self.GetSize()[1] * 0.1), 1, wx.EXPAND, 5)
 
         sbSizer5 = wx.StaticBoxSizer(wx.StaticBox(self, wx.ID_ANY, u"Parameters"), wx.VERTICAL)
 
@@ -123,7 +123,7 @@ class SAFrame(wx.Frame):
         self.init_graph = wx.Panel(sbSizer9.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(-1, -1),
                                    wx.TAB_TRAVERSAL)
         self.init_graph.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNHIGHLIGHT))
-        self.init_graph.SetMinSize(wx.Size(460, 270))
+        self.init_graph.SetMinSize(wx.Size(460, 260))
 
         fgSizer4.Add(self.init_graph, 1, wx.EXPAND | wx.ALL, 5)
 
@@ -183,8 +183,8 @@ class SAFrame(wx.Frame):
 
         fgSizer1.Add(sbSizer9, 1, wx.EXPAND, 5)
 
-        fgSizer1.Add((self.GetSize()[0] * 0.07, self.GetSize()[1] * 0.1), 1, wx.EXPAND, 5)  # Add spacer pos. 8-9
-        fgSizer1.Add((self.GetSize()[0] * 0.07, self.GetSize()[1] * 0.1), 1, wx.EXPAND, 5)
+        fgSizer1.Add((self.GetSize()[0] * 0.06, self.GetSize()[1] * 0.1), 1, wx.EXPAND, 5)  # Add spacer pos. 8-9
+        fgSizer1.Add((self.GetSize()[0] * 0.06, self.GetSize()[1] * 0.1), 1, wx.EXPAND, 5)
 
         sbSizer6 = wx.StaticBoxSizer(wx.StaticBox(self, wx.ID_ANY, u"Optimization"), wx.VERTICAL)
 
@@ -211,13 +211,13 @@ class SAFrame(wx.Frame):
         self.opt_graph = wx.Panel(sbSizer10.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(-1, -1),
                                   wx.TAB_TRAVERSAL)
         self.opt_graph.SetBackgroundColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNHIGHLIGHT))
-        self.opt_graph.SetMinSize(wx.Size(460, 270))
+        self.opt_graph.SetMinSize(wx.Size(460, 260))
 
         sbSizer10.Add(self.opt_graph, 1, wx.EXPAND | wx.ALL, 5)
 
         fgSizer1.Add(sbSizer10, 1, wx.CENTRE | wx.EXPAND, 5)
 
-        fgSizer1.Add((self.GetSize()[0] * 0.08, self.GetSize()[1] * 0.1), 1, wx.EXPAND, 5)  # Add spacer pos. 12-16
+        fgSizer1.Add((self.GetSize()[0] * 0.06, self.GetSize()[1] * 0.1), 1, wx.EXPAND, 5)  # Add spacer pos. 12-16
         fgSizer1.Add((self.GetSize()[0] * 0.1, self.GetSize()[1] * 0.04), 1, wx.EXPAND, 5)
         fgSizer1.Add((self.GetSize()[0] * 0.1, self.GetSize()[1] * 0.04), 1, wx.EXPAND, 5)
         fgSizer1.Add((self.GetSize()[0] * 0.1, self.GetSize()[1] * 0.04), 1, wx.EXPAND, 5)
@@ -471,7 +471,7 @@ app = wx.App(False)  # does not redirects stdout to a window
 frame = SAFrame(None)  # frame is the top level window
 
 ''' inspect the layout if needed '''
-import wx.lib.inspection as wxli
-wxli.InspectionTool().Show()
+#import wx.lib.inspection as wxli
+#wxli.InspectionTool().Show()
 
 app.MainLoop()

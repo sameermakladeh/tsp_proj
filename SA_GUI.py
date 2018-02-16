@@ -7,6 +7,7 @@ import SA_solve
 import numpy as np
 import wxmplot
 import pandas
+import subprocess
 from tkinter.filedialog import askopenfile
 
 
@@ -130,13 +131,13 @@ class SAFrame(wx.Frame):
         self.tspdata = wx.grid.Grid(sbSizer9.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(-1, -1), wx.VSCROLL)
 
         ''' set up the Grid for TSP data '''
-        self.tspdata.CreateGrid(25, 2)
+        self.tspdata.CreateGrid(29, 2)
         self.tspdata.EnableEditing(True)
         self.tspdata.EnableGridLines(True)
         self.tspdata.SetGridLineColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT))
         self.tspdata.EnableDragGridSize(False)
         self.tspdata.SetMargins(0, 0)
-        for i in range(25):
+        for i in range(29):
             for j in range(2):
                 self.tspdata.SetCellValue(i, j, '0')
                 self.tspdata.SetCellEditor(i, j, wx.grid.GridCellFloatEditor())
@@ -187,10 +188,19 @@ class SAFrame(wx.Frame):
         fgSizer1.Add((self.GetSize()[0] * 0.06, self.GetSize()[1] * 0.1), 1, wx.EXPAND, 5)
 
         sbSizer6 = wx.StaticBoxSizer(wx.StaticBox(self, wx.ID_ANY, u"Optimization"), wx.VERTICAL)
+        sbSizer7 = wx.StaticBoxSizer(wx.StaticBox(sbSizer6.GetStaticBox(), wx.ID_ANY, u"Action"), wx.HORIZONTAL)
 
-        self.optimize = wx.Button(sbSizer6.GetStaticBox(), wx.ID_ANY, u"Optimize!", wx.DefaultPosition, wx.DefaultSize,
-                                  0)
-        sbSizer6.Add(self.optimize, 0, wx.ALL | wx.ALIGN_CENTRE, 5)
+
+        self.optimize = wx.Button(sbSizer7.GetStaticBox(), wx.ID_ANY, u"Optimize", wx.DefaultPosition, wx.DefaultSize, 0)
+        sbSizer7.Add(self.optimize, 0, wx.ALL, 5)
+
+        self.outline = wx.Button(sbSizer7.GetStaticBox(), wx.ID_ANY, u"Outline", wx.DefaultPosition, wx.DefaultSize, 0)
+        sbSizer7.Add(self.outline, 0, wx.ALL, 5)
+
+        self.learn = wx.Button(sbSizer7.GetStaticBox(), wx.ID_ANY, u"Learn", wx.DefaultPosition, wx.DefaultSize, 0)
+        sbSizer7.Add(self.learn, 0, wx.ALL, 5)
+
+        sbSizer6.Add(sbSizer7, 1, wx.EXPAND, 5)
 
         self.opt_sol = wx.Panel(sbSizer6.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
                                 wx.TAB_TRAVERSAL)
@@ -259,11 +269,17 @@ class SAFrame(wx.Frame):
         self.optimize.Bind(wx.EVT_BUTTON, self.on_optimize)
         self.optimize.Bind(wx.EVT_ENTER_WINDOW, self.on_hover_optimize)
         self.optimize.Bind(wx.EVT_LEAVE_WINDOW, self.on_leave_optimize)
+        self.outline.Bind(wx.EVT_BUTTON, self.on_outline)
+        self.outline.Bind(wx.EVT_ENTER_WINDOW, self.on_hover_outline)
+        self.outline.Bind(wx.EVT_LEAVE_WINDOW, self.on_leave_outline)
+        self.learn.Bind(wx.EVT_BUTTON, self.on_learn)
+        self.learn.Bind(wx.EVT_ENTER_WINDOW, self.on_hover_learn)
+        self.learn.Bind(wx.EVT_LEAVE_WINDOW, self.on_leave_learn)
         self.Show()
 
     global pars, opt_pars, curr_data
     pars = opt_pars = [0, 0, 0, 0]
-    curr_data = np.zeros((25,2))
+    curr_data = np.zeros((29,2))
 
     def __del__(self):
         pass
@@ -289,9 +305,9 @@ class SAFrame(wx.Frame):
         pl = wxmplot.PlotPanel(self.init_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
         pl.clear()
         # Not sure why i need to provide limits but it wont work without!! :@
-        pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=2, xmax=max(curr_data[:, 0]) * 1.1,
-                       ymax=max(curr_data[:, 1]) * 1.15, xmin=min(min(curr_data[:, 0]) * 1.1, 0),
-                       ymin=min(min(curr_data[:, 1]) * 1.15, 0))
+        pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=2, xmax=max(curr_data[:, 0]) * 1.01,
+                       ymax=max(curr_data[:, 1]) * 1.01, xmin=min(curr_data[:, 0]) * 0.98,
+                       ymin=min(curr_data[:, 1]) * 0.98)
 
     def on_save(self, event):
         event.Skip()
@@ -333,7 +349,7 @@ class SAFrame(wx.Frame):
         ''' Plot the graph so the order of visited points corresponds with the solution'''
         pl = wxmplot.PlotPanel(self.init_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
         pl.clear()
-        plot_data = np.zeros((25, 2))
+        plot_data = np.zeros((29, 2))
         j = 0
         for i in sol[0]:
             plot_data[j, 0] = curr_data[i, 0]
@@ -356,9 +372,9 @@ class SAFrame(wx.Frame):
         pl = wxmplot.PlotPanel(self.init_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
         pl.clear()
         # Not sure why i need to provide limits but it wont work without!! :@
-        pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=2, xmax=max(curr_data[:, 0])*1.1,
-                       ymax=max(curr_data[:, 1])*1.15, xmin=min(min(curr_data[:, 0])*1.1, 0),
-                       ymin=min(min(curr_data[:, 1])*1.15,0))
+        pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=2, xmax=max(curr_data[:, 0]) * 1.01,
+                       ymax=max(curr_data[:, 1]) * 1.01, xmin=min(curr_data[:, 0]) * 0.98,
+                       ymin=min(curr_data[:, 1]) * 0.98)
 
     def onimdata(self, event):
         ''' Fast importing of a file named 'tsp.xlsx' '''
@@ -375,9 +391,9 @@ class SAFrame(wx.Frame):
         pl = wxmplot.PlotPanel(self.init_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
         pl.clear()
         # Not sure why i need to provide limits but it wont work without!! :@
-        pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=2, xmax=max(curr_data[:, 0]) * 1.1,
-                       ymax=max(curr_data[:, 1]) * 1.15, xmin=min(min(curr_data[:, 0]) * 1.1, 0),
-                       ymin=min(min(curr_data[:, 1]) * 1.15, 0))
+        pl.scatterplot(curr_data[:, 0], curr_data[:, 1], size=2, xmax=max(curr_data[:, 0]) * 1.01,
+                       ymax=max(curr_data[:, 1]) * 1.01, xmin=min(curr_data[:, 0]) * 0.98,
+                       ymin=min(curr_data[:, 1]) * 0.98)
 
     def onexdata(self, event):
         event.Skip()
@@ -400,7 +416,7 @@ class SAFrame(wx.Frame):
         ''' Plot the graph so the order of visited points correspondes with the solution'''
         pl = wxmplot.PlotPanel(self.opt_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
         pl.clear()
-        plot_data = np.zeros((25, 2))
+        plot_data = np.zeros((29, 2))
         j = 0
         for i in sol[0]:
             plot_data[j, 0] = curr_data[i, 0]
@@ -413,9 +429,31 @@ class SAFrame(wx.Frame):
                                                size=wx.Panel.GetSize(self.init_sol), style=wx.CENTER,
                                                pos=(wx.Panel.GetSize(self.init_graph)[0], 0))
 
+    def on_outline(self, event):
+        ''' get the outline points and show the solution without them '''
+        outline = SA_solve.find_outline(curr_data, pars)
+
+        self.opt_graph.some_text = wx.TextCtrl(self.opt_graph, size=wx.Panel.GetSize(self.init_graph),
+                                               style=wx.TE_MULTILINE | wx.TE_BESTWRAP | wx.TE_READONLY)
+        out_sol = []
+        index = 0
+        for acc in outline:
+            if acc[3] > str(0.8):   # TODO: define what is a good benchmark value
+                tst = 'point removed is: ({:.4f},{:.4f}) solution is: {} value is: {:.4f} accuracy is: {} \n'.format(
+                    *outline[index][0], outline[index][1], outline[index][2], outline[index][3])
+                self.opt_graph.some_text.AppendText(tst)
+                self.opt_graph.some_text.AppendText('\n')
+                out_sol.append(tst)
+            index += 1
+
+
+    def on_learn(self, event):
+        event.Skip()
+
     def on_size(self, event):
         self.Fit()  # Prevent expansion
 
+# These methods add information in the status bar
     def on_hover_solvit(self, event):
         self.m_statusBar.SetStatusText(" Solve the given TSP using SA algorithm ")
 
@@ -426,6 +464,18 @@ class SAFrame(wx.Frame):
         self.m_statusBar.SetStatusText(" Solve given TSP with an optimized version of SA  ")
 
     def on_leave_optimize(self, event):
+        self.m_statusBar.SetStatusText("")
+
+    def on_hover_outline(self, event):
+        self.m_statusBar.SetStatusText(" Identify outline points in given TSP as problematic hubs ")
+
+    def on_leave_outline(self, event):
+        self.m_statusBar.SetStatusText("")
+
+    def on_hover_learn(self, event):
+        self.m_statusBar.SetStatusText(" Initiate a learning algorithm on the parameters of SA and solve the TSP  ")
+
+    def on_leave_learn(self, event):
         self.m_statusBar.SetStatusText("")
 
     def on_hover_imdata(self, event):

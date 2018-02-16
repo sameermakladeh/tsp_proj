@@ -434,11 +434,11 @@ class SAFrame(wx.Frame):
         outline = SA_solve.find_outline(curr_data, pars)
 
         self.opt_graph.some_text = wx.TextCtrl(self.opt_graph, size=wx.Panel.GetSize(self.init_graph),
-                                               style=wx.TE_MULTILINE | wx.TE_BESTWRAP | wx.TE_READONLY)
+                                               style=wx.TE_MULTILINE | wx.TE_BESTWRAP | wx.TE_READONLY )
         out_sol = []
         index = 0
         for acc in outline:
-            if acc[3] > str(0.8):   # TODO: define what is a good benchmark value
+            if acc[3] > str(0.75):   # TODO: define what is a good benchmark value
                 tst = 'point removed is: ({:.4f},{:.4f}) solution is: {} value is: {:.4f} accuracy is: {} \n'.format(
                     *outline[index][0], outline[index][1], outline[index][2], outline[index][3])
                 self.opt_graph.some_text.AppendText(tst)

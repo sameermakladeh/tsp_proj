@@ -30,21 +30,20 @@ def solve(data, parameters):
 
     end_time = timeit.default_timer()
 
-    value_2 = test_p.solution_value(best_solution)
-    bench_2 = optimm / value_2
+    bench_2 = optimm/best_solution[1]
     print("bench is:", bench_2)
 
-    print("best sol:", best_solution, test_p.solution_value(best_solution))
+    print("best sol:", best_solution, best_solution[1])
     print('time (sec) = ', end_time - start_time)
 
-    return best_solution, test_p.solution_value(best_solution), end_time
+    return best_solution, end_time
 
 
 def find_outline(data, parameters):
 
     ''' For each hub make an instance of the TSP without it and check if its an outline '''
 
-    w, h = 4, 29
+    w, h = 3, 29
     solution_info = [[None] * w for i in range(h)]
     dtype = 'pure'
     sol_i = 0
@@ -66,13 +65,12 @@ def find_outline(data, parameters):
         out = test_outline.generate_solution()
 
         '''  using the starting solution generate neighbours and accept based on algorithm criteria '''
-        best_solution = solve_sa(test_outline, out, parameters[0], parameters[1], parameters[2], parameters[3])
+        best_solution_out = solve_sa(test_outline, out, parameters[0], parameters[1], parameters[2], parameters[3])
         end_time = timeit.default_timer()
 
-        value = test_outline.solution_value(best_solution)
-        bench = optimm/value
+        bench = optimm/best_solution_out[1]
         print("bench is:", bench)
-        solution_info[sol_i] = [(hub[0], hub[1]), best_solution, value, "%.2f" %bench]
+        solution_info[sol_i] = [(hub[0], hub[1]),  best_solution_out[1], "%.2f" %bench]
         sol_i += 1
 
     return solution_info

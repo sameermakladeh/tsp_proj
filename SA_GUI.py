@@ -340,10 +340,9 @@ class SAFrame(wx.Frame):
     def on_solvit(self, event):
         # TODO change calling SA_solve to calling it with TSP and paramaters
         sol = SA_solve.solve(curr_data, pars)
-        labs = ["best value: ", "time: ", "start: "]
-        sols = [labs[0], str(sol[1]), labs[1], str(sol[2]), labs[2], str(curr_data[sol[0][0]])]  # show starting point
-        self.init_sol.some_text = wx.StaticText(self.init_sol, label=str(sols[0:2]) + '\n' + str(sols[2:4]) +
-                                                '\n' + str(sols[4:6]),
+        labs = ["best value: ", "time: "]
+        sols = [labs[0], str(sol[0][1]), labs[1], str(sol[1])]  # show results
+        self.init_sol.some_text = wx.StaticText(self.init_sol, label=str(sols[0:2]) + '\n' + str(sols[2:4]) + '\n',
                                                 size=wx.Panel.GetSize(self.init_sol), style=wx.ALIGN_CENTER)
 
         ''' Plot the graph so the order of visited points corresponds with the solution'''
@@ -351,7 +350,7 @@ class SAFrame(wx.Frame):
         pl.clear()
         plot_data = np.zeros((29, 2))
         j = 0
-        for i in sol[0]:
+        for i in sol[0][0]:
             plot_data[j, 0] = curr_data[i, 0]
             plot_data[j, 1] = curr_data[i, 1]
             j += 1
@@ -405,11 +404,10 @@ class SAFrame(wx.Frame):
         #print(LAYOUT.format(*opt_pars))
 
         sol = SA_solve.solve(curr_data, pars)
-        labs = ["best value: ", "time: ", "start: "]
-        sols = [labs[0], str(sol[1]), labs[1], str(sol[2]), labs[2], str(curr_data[sol[0][0]])]  # show starting point
-        self.opt_sol.some_text = wx.StaticText(self.opt_sol, label=str(sols[0:2]) + '\n' + str(sols[2:4]) +
-                                                '\n' + str(sols[4:6]),
-                                                size=wx.Panel.GetSize(self.opt_sol), style=wx.ALIGN_CENTER)
+        labs = ["best value: ", "time: "]
+        sols = [labs[0], str(sol[0][1]), labs[1], str(sol[1])]  # show results
+        self.opt_sol.some_text = wx.StaticText(self.opt_sol, label=str(sols[0:2]) + '\n' + str(sols[2:4]) + '\n',
+                                               size=wx.Panel.GetSize(self.opt_sol), style=wx.ALIGN_CENTER)
 
         self.opt_par.some_text = wx.StaticText(self.opt_par, label=str(opt_pars), size=wx.Panel.GetSize(self.opt_par), style=wx.ALIGN_CENTER)
 
@@ -418,7 +416,7 @@ class SAFrame(wx.Frame):
         pl.clear()
         plot_data = np.zeros((29, 2))
         j = 0
-        for i in sol[0]:
+        for i in sol[0][0]:
             plot_data[j, 0] = curr_data[i, 0]
             plot_data[j, 1] = curr_data[i, 1]
             j += 1
@@ -438,9 +436,9 @@ class SAFrame(wx.Frame):
         out_sol = []
         index = 0
         for acc in outline:
-            if acc[3] > str(0.75):   # TODO: define what is a good benchmark value
-                tst = 'point removed is: ({:.4f},{:.4f}) solution is: {} value is: {:.4f} accuracy is: {} \n'.format(
-                    *outline[index][0], outline[index][1], outline[index][2], outline[index][3])
+            if acc[2] > str(0.75):   # TODO: define what is a good benchmark value
+                tst = 'point removed is: ({:.4f},{:.4f}) value is: {:.4f} accuracy is: {} \n'.format(
+                    *outline[index][0], outline[index][1], outline[index][2])
                 self.opt_graph.some_text.AppendText(tst)
                 self.opt_graph.some_text.AppendText('\n')
                 out_sol.append(tst)

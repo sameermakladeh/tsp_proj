@@ -338,12 +338,12 @@ class SAFrame(wx.Frame):
         pars[3] = float(self.iter_num.GetValue())
 
     def on_solvit(self, event):
-        # TODO change calling SA_solve to calling it with TSP and paramaters
         sol = SA_solve.solve(curr_data, pars)
-        labs = ["best value: ", "time: "]
-        sols = [labs[0], str(sol[0][1]), labs[1], str(sol[1])]  # show results
-        self.init_sol.some_text = wx.StaticText(self.init_sol, label=str(sols[0:2]) + '\n' + str(sols[2:4]) + '\n',
-                                                size=wx.Panel.GetSize(self.init_sol), style=wx.ALIGN_CENTER)
+        labs = ["best value: ", "time: ", "confidence interval: "]
+        sols = [labs[0], str(sol[0][1]), labs[1], str(sol[1]), labs[2], str(sol[0][2])]  # show results
+        self.init_sol.some_text = wx.StaticText(self.init_sol, label=str(sols[0:2]) + '\n' + str(sols[2:4]) + '\n'
+                                                + str(sols[4:6]) + '\n', size=wx.Panel.GetSize(self.init_sol),
+                                                style=wx.ALIGN_CENTER)
 
         ''' Plot the graph so the order of visited points corresponds with the solution'''
         pl = wxmplot.PlotPanel(self.init_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
@@ -403,20 +403,25 @@ class SAFrame(wx.Frame):
         #print(LAYOUT.format("Max Temperature", "Min Temperature", "Alpha", "Iteration Number"))
         #print(LAYOUT.format(*opt_pars))
 
-        sol = SA_solve.solve(curr_data, pars)
-        labs = ["best value: ", "time: "]
-        sols = [labs[0], str(sol[0][1]), labs[1], str(sol[1])]  # show results
-        self.opt_sol.some_text = wx.StaticText(self.opt_sol, label=str(sols[0:2]) + '\n' + str(sols[2:4]) + '\n',
-                                               size=wx.Panel.GetSize(self.opt_sol), style=wx.ALIGN_CENTER)
+        sol = SA_solve.ml_solve(curr_data, pars)
+        labs = ["original value: ", ", original parameters: ", ", original interval"]
+        new_labs = ["new value: ", ", new parameters: ", ", new interval"]
+        sols = [labs[0], str(sol[0][1]), labs[1], str(sol[1]), labs[2], str(sol[0][2])]
+        new_sols = [new_labs[0], str(sol[2][1]), new_labs[1], str(sol[3]), new_labs[2], str(sol[2][2])]  # show results
+        self.opt_sol.some_text = wx.StaticText(self.opt_sol, label=str(sols[0:2]) + '\n' + str(sols[2:4]) + '\n'
+                                               + str(sols[4:6]) + '\n', size=wx.Panel.GetSize(self.opt_sol),
+                                               style=wx.ALIGN_CENTER)
 
-        self.opt_par.some_text = wx.StaticText(self.opt_par, label=str(opt_pars), size=wx.Panel.GetSize(self.opt_par), style=wx.ALIGN_CENTER)
+        self.opt_par.some_text = wx.StaticText(self.opt_par, label=str(new_sols[0:2]) + '\n' + str(new_sols[2:4]) + '\n'
+                                               + str(new_sols[4:6]) + '\n',size=wx.Panel.GetSize(self.opt_par),
+                                               style=wx.ALIGN_CENTER)
 
         ''' Plot the graph so the order of visited points correspondes with the solution'''
         pl = wxmplot.PlotPanel(self.opt_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
         pl.clear()
         plot_data = np.zeros((29, 2))
         j = 0
-        for i in sol[0][0]:
+        for i in sol[2][0]:
             plot_data[j, 0] = curr_data[i, 0]
             plot_data[j, 1] = curr_data[i, 1]
             j += 1
@@ -436,14 +441,13 @@ class SAFrame(wx.Frame):
         out_sol = []
         index = 0
         for acc in outline:
-            if acc[2] > str(0.75):   # TODO: define what is a good benchmark value
+            if acc[2] > str(0.75):   # TODO: define a good benchmark value
                 tst = 'point removed is: ({:.4f},{:.4f}) value is: {:.4f} accuracy is: {} \n'.format(
                     *outline[index][0], outline[index][1], outline[index][2])
                 self.opt_graph.some_text.AppendText(tst)
                 self.opt_graph.some_text.AppendText('\n')
                 out_sol.append(tst)
             index += 1
-
 
     def on_learn(self, event):
         event.Skip()

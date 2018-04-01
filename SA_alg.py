@@ -7,6 +7,7 @@ from scipy import stats as stat
 
 
 def calc_interval(arr):
+    '''  calculates the confidence interval of all the runs made by SA to determine credibility '''
     n = len(arr)
     x_mean = st.mean(arr)
     conf_interval = stat.t.interval(0.95, n-1, x_mean, stat.sem(arr))
@@ -38,9 +39,11 @@ def solve_sa(tsprob, current_solution, t_max, t_min, alpha, iter_n):
                     current_solution = new_solution
                     v_curr = v_new
                     if v_new < v_loc_best:
+                        ''' if a better solution is found that the local run in the Temperature, save it '''
                         loc_best_sol = list(new_solution)
                         v_loc_best = v_new
                     if v_new < v_gbest_sol:
+                        ''' if a better solution is found, globally, the the SA runs, save it '''
                         g_best_sol = list(new_solution)
                         v_gbest_sol = v_new
                         # print("GBHEST - value:", g_best_sol, v_gbest)
@@ -52,7 +55,7 @@ def solve_sa(tsprob, current_solution, t_max, t_min, alpha, iter_n):
             t = t*alpha
         exp_value.append(v_loc_best)
         K += 1
-    interval = calc_interval(exp_value)
+    interval = calc_interval(exp_value)  # calculate the confidence interval of the solutions
     return g_best_sol, v_gbest_sol,  interval  # returns best solution since the start of the alg.
 
 

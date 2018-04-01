@@ -433,7 +433,7 @@ class SAFrame(wx.Frame):
                                                pos=(wx.Panel.GetSize(self.init_graph)[0], 0))
 
     def on_outline(self, event):
-        ''' get the outline points and show the solution without them '''
+        ''' get the out layer points and show the solution without them '''
         outline = SA_solve.find_outline(curr_data, pars)
 
         self.opt_graph.some_text = wx.TextCtrl(self.opt_graph, size=wx.Panel.GetSize(self.init_graph),
@@ -441,9 +441,9 @@ class SAFrame(wx.Frame):
         out_sol = []
         index = 0
         for acc in outline:
-            if acc[2] > str(0.75):   # TODO: define a good benchmark value
-                tst = 'point removed is: ({:.4f},{:.4f}) value is: {:.4f} accuracy is: {} \n'.format(
-                    *outline[index][0], outline[index][1], outline[index][2])
+            if acc[3] == "Out Layer!":   # TODO: define a good benchmark value
+                tst = 'point removed is: ({:.4f},{:.4f}) value is: {:.4f} interval is: ({:.4f},{:.4f}) \n'.format(
+                    *outline[index][0], outline[index][1], *outline[index][2])  # the * is for tuple to string format!!
                 self.opt_graph.some_text.AppendText(tst)
                 self.opt_graph.some_text.AppendText('\n')
                 out_sol.append(tst)

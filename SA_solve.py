@@ -24,6 +24,7 @@ def solve(data, parameters):
 
     ''' generate a starting random solution for TSP '''
     # z1 = test_p2.dist_matrix()
+
     start_time = timeit.default_timer()
     z = test_p.generate_solution()
 
@@ -33,7 +34,7 @@ def solve(data, parameters):
 
     end_time = timeit.default_timer()
 
-    bench_2 = optimm/best_solution[1]
+    #bench_2 = optimm/best_solution[1]
     #print("bench is:", bench_2)
 
     print("best sol:", best_solution[0], best_solution[1], best_solution[2])
@@ -45,16 +46,16 @@ def solve(data, parameters):
 def find_outline(data, parameters):
 
     ''' build the confidence interval for which the decision will be based on what is an out layer point '''
-    w, h, history_num = 3, 29, 100
+    w, h, history_num = 3, 38, 100      # TODO: Get a data set in the size of the grid
     dtype = 'pure'
     history = [[None] * w for i in range(history_num)]
     j, hist = 0, 0
     used_hub = []
     inter_data = []
     while j < history_num:
-        history_data = np.zeros((28, 2))
+        history_data = np.zeros((37, 2))       # TODO: Save reduced problem data
         ''' sample a random hub to take out and calculate solution without'''
-        ran_num = np.random.randint(0, 29)
+        ran_num = np.random.randint(0, 38)     # TODO: Get a data set in the size of the grid
         used_hub = ran_hub = data[ran_num][:]
         i = 0
         for d in data:
@@ -82,11 +83,11 @@ def find_outline(data, parameters):
         j += 1
     history_interval = calc_interval(inter_data)  # calculate the confidence interval of the history solutions
 
-    ''' For each hub make an instance of the TSP without it and check if its an out layer point '''
+    ''' For each hub make an instance of the TSP without it and check if its an outlier point '''
     solution_info = [[None] * w for i in range(h)]
     sol_i = 0
     for hub in data:
-        new_data = np.zeros((28, 2))
+        new_data = np.zeros((37, 2))       # TODO: Save reduced problem data
         i = 0
         for x in data:
             if not (x[0] == hub[0] and x[1] == hub[1]):
@@ -107,7 +108,7 @@ def find_outline(data, parameters):
         end_time = timeit.default_timer()
 
         if best_solution_out[1] > history_interval[1]:
-            bench = "Out Layer!"
+            bench = "Outlier!"
         else:
             bench = "meh, normal..."
 
@@ -142,12 +143,13 @@ def ml_solve(data, parameters):
     new_parameters = list(parameters)
     top_pars = [labels, parameters, [0, 0, 0, 0]]     # make a list with size 4
     ml_gbest = tuple(original_solution)
+    loops = 10
 
     for p in range(0, len(top_pars[0][:])):
         ''' for each parameter loop individually and check it's improvement '''
         best_par = 0
         best_bench = 1
-        for num in range(1, 2):
+        for num in range(1, loops):
             if top_pars[0][p] == "max temperature":
                 new_par = np.random.random_integers(100, 1000)
                 ml_solution = solve_sa(test_ml, ml, new_par, parameters[1], parameters[2], parameters[3])
@@ -171,7 +173,10 @@ def ml_solve(data, parameters):
                         ml_gbest = ml_solution
 
             elif top_pars[0][p] == "alpha":
-                new_par = round(np.random.rand(1)[0], 2)
+                while True:
+                    new_par = round(np.random.rand(1)[0], 2)
+                    if 0.05 < new_par < 0.9:
+                        break  # this condition limits the values of alpha TODO: change if necessary
                 ml_solution = solve_sa(test_ml, ml, parameters[0], parameters[1], new_par, parameters[3])
                 bench_sol = ml_solution[1] / original_solution[1]
                 if bench_sol < 1 and bench_sol < best_bench:
@@ -182,7 +187,7 @@ def ml_solve(data, parameters):
                         ml_gbest = ml_solution
 
             elif top_pars[0][p] == "loops":
-                new_par = np.random.random_integers(10, 200)
+                new_par = np.random.random_integers(10, 100)
                 ml_solution = solve_sa(test_ml, ml, parameters[0], parameters[1], parameters[2], new_par)
                 bench_sol = ml_solution[1] / original_solution[1]
                 if bench_sol < 1 and bench_sol < best_bench:

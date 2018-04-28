@@ -14,7 +14,7 @@ from tkinter.filedialog import askopenfile
 class SAFrame(wx.Frame):
     # derive from frame a new class
     def __init__(self, parent):
-        wx.Frame.__init__(self, parent, id=wx.ID_ANY, title='SA thingy', pos=wx.DefaultPosition,
+        wx.Frame.__init__(self, parent, id=wx.ID_ANY, title='SA Program', pos=wx.DefaultPosition,
                           size=wx.Size(-1, -1), style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL | wx.ALIGN_CENTRE)
 
         self.SetSizeHints(wx.DefaultSize, wx.DefaultSize)
@@ -131,13 +131,13 @@ class SAFrame(wx.Frame):
         self.tspdata = wx.grid.Grid(sbSizer9.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(-1, -1), wx.VSCROLL)
 
         ''' set up the Grid for TSP data '''
-        self.tspdata.CreateGrid(29, 2)
+        self.tspdata.CreateGrid(38, 2)     # TODO: Controls the size of the Grid
         self.tspdata.EnableEditing(True)
         self.tspdata.EnableGridLines(True)
         self.tspdata.SetGridLineColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT))
         self.tspdata.EnableDragGridSize(False)
         self.tspdata.SetMargins(0, 0)
-        for i in range(29):
+        for i in range(38):        # TODO: Controls the size of the Grid
             for j in range(2):
                 self.tspdata.SetCellValue(i, j, '0')
                 self.tspdata.SetCellEditor(i, j, wx.grid.GridCellFloatEditor())
@@ -194,7 +194,7 @@ class SAFrame(wx.Frame):
         self.optimize = wx.Button(sbSizer7.GetStaticBox(), wx.ID_ANY, u"Optimize", wx.DefaultPosition, wx.DefaultSize, 0)
         sbSizer7.Add(self.optimize, 0, wx.ALL, 5)
 
-        self.outline = wx.Button(sbSizer7.GetStaticBox(), wx.ID_ANY, u"Outline", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.outline = wx.Button(sbSizer7.GetStaticBox(), wx.ID_ANY, u"Outlier", wx.DefaultPosition, wx.DefaultSize, 0)
         sbSizer7.Add(self.outline, 0, wx.ALL, 5)
 
         self.learn = wx.Button(sbSizer7.GetStaticBox(), wx.ID_ANY, u"Learn", wx.DefaultPosition, wx.DefaultSize, 0)
@@ -279,7 +279,7 @@ class SAFrame(wx.Frame):
 
     global pars, opt_pars, curr_data
     pars = opt_pars = [0, 0, 0, 0]
-    curr_data = np.zeros((29,2))
+    curr_data = np.zeros((38,2))       # TODO: Controls the size of the data set
 
     def __del__(self):
         pass
@@ -348,7 +348,7 @@ class SAFrame(wx.Frame):
         ''' Plot the graph so the order of visited points corresponds with the solution'''
         pl = wxmplot.PlotPanel(self.init_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
         pl.clear()
-        plot_data = np.zeros((29, 2))
+        plot_data = np.zeros((38, 2))   # TODO: controls the size of the data to plot
         j = 0
         for i in sol[0][0]:
             plot_data[j, 0] = curr_data[i, 0]
@@ -419,7 +419,7 @@ class SAFrame(wx.Frame):
         ''' Plot the graph so the order of visited points correspondes with the solution'''
         pl = wxmplot.PlotPanel(self.opt_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
         pl.clear()
-        plot_data = np.zeros((29, 2))
+        plot_data = np.zeros((38, 2))      # TODO: Controls the size of the data to plot
         j = 0
         for i in sol[2][0]:
             plot_data[j, 0] = curr_data[i, 0]
@@ -441,7 +441,7 @@ class SAFrame(wx.Frame):
         out_sol = []
         index = 0
         for acc in outline:
-            if acc[3] == "Out Layer!":   # TODO: define a good benchmark value
+            if acc[3] == "Outlier!":   # TODO: define a good benchmark value
                 tst = 'point removed is: ({:.4f},{:.4f}) value is: {:.4f} interval is: ({:.4f},{:.4f}) \n'.format(
                     *outline[index][0], outline[index][1], *outline[index][2])  # the * is for tuple to string format!!
                 self.opt_graph.some_text.AppendText(tst)

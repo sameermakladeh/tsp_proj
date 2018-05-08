@@ -23,7 +23,7 @@ def solve_sa(tsprob, current_solution, t_max, t_min, alpha, iter_n):
     exp_value = []
     g_best_sol = list(current_solution)
     v_gbest_sol = tsprob.solution_value(g_best_sol)
-    while K < 50:       # TODO: Change for smaller problems
+    while K < 1:       # TODO: Change for smaller problems
         v_curr = tsprob.solution_value(current_solution)
         loc_best_sol = list(current_solution)
         v_loc_best = tsprob.solution_value(loc_best_sol)

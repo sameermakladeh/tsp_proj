@@ -131,13 +131,13 @@ class SAFrame(wx.Frame):
         self.tspdata = wx.grid.Grid(sbSizer9.GetStaticBox(), wx.ID_ANY, wx.DefaultPosition, wx.Size(-1, -1), wx.VSCROLL)
 
         ''' set up the Grid for TSP data '''
-        self.tspdata.CreateGrid(38, 2)     # TODO: Controls the size of the Grid
+        self.tspdata.CreateGrid(29, 2)     # TODO: Controls the size of the Grid
         self.tspdata.EnableEditing(True)
         self.tspdata.EnableGridLines(True)
         self.tspdata.SetGridLineColour(wx.SystemSettings.GetColour(wx.SYS_COLOUR_BTNTEXT))
         self.tspdata.EnableDragGridSize(False)
         self.tspdata.SetMargins(0, 0)
-        for i in range(38):        # TODO: Controls the size of the Grid
+        for i in range(29):        # TODO: Controls the size of the Grid
             for j in range(2):
                 self.tspdata.SetCellValue(i, j, '0')
                 self.tspdata.SetCellEditor(i, j, wx.grid.GridCellFloatEditor())
@@ -279,7 +279,7 @@ class SAFrame(wx.Frame):
 
     global pars, opt_pars, curr_data
     pars = opt_pars = [0, 0, 0, 0]
-    curr_data = np.zeros((38,2))       # TODO: Controls the size of the data set
+    curr_data = np.zeros((29,2))       # TODO: Controls the size of the data set
 
     def __del__(self):
         pass
@@ -348,7 +348,7 @@ class SAFrame(wx.Frame):
         ''' Plot the graph so the order of visited points corresponds with the solution'''
         pl = wxmplot.PlotPanel(self.init_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
         pl.clear()
-        plot_data = np.zeros((38, 2))   # TODO: controls the size of the data to plot
+        plot_data = np.zeros((29, 2))   # TODO: controls the size of the data to plot
         j = 0
         for i in sol[0][0]:
             plot_data[j, 0] = curr_data[i, 0]
@@ -419,7 +419,7 @@ class SAFrame(wx.Frame):
         ''' Plot the graph so the order of visited points correspondes with the solution'''
         pl = wxmplot.PlotPanel(self.opt_graph, size=wx.Panel.GetSize(self.init_graph), dpi=100, fontsize=9)
         pl.clear()
-        plot_data = np.zeros((38, 2))      # TODO: Controls the size of the data to plot
+        plot_data = np.zeros((29, 2))      # TODO: Controls the size of the data to plot
         j = 0
         for i in sol[2][0]:
             plot_data[j, 0] = curr_data[i, 0]

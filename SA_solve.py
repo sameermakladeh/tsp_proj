@@ -46,16 +46,16 @@ def solve(data, parameters):
 def find_outline(data, parameters):
 
     ''' build the confidence interval for which the decision will be based on what is an out layer point '''
-    w, h, history_num = 3, 38, 100      # TODO: Get a data set in the size of the grid
+    w, h, history_num = 3, 29, 100      # TODO: Get a data set in the size of the grid
     dtype = 'pure'
     history = [[None] * w for i in range(history_num)]
     j, hist = 0, 0
     used_hub = []
     inter_data = []
     while j < history_num:
-        history_data = np.zeros((37, 2))       # TODO: Save reduced problem data
+        history_data = np.zeros((28, 2))       # TODO: Save reduced problem data
         ''' sample a random hub to take out and calculate solution without'''
-        ran_num = np.random.randint(0, 38)     # TODO: Get a data set in the size of the grid
+        ran_num = np.random.randint(0, 29)     # TODO: Get a data set in the size of the grid
         used_hub = ran_hub = data[ran_num][:]
         i = 0
         for d in data:
@@ -87,7 +87,7 @@ def find_outline(data, parameters):
     solution_info = [[None] * w for i in range(h)]
     sol_i = 0
     for hub in data:
-        new_data = np.zeros((37, 2))       # TODO: Save reduced problem data
+        new_data = np.zeros((29, 2))       # TODO: Save reduced problem data
         i = 0
         for x in data:
             if not (x[0] == hub[0] and x[1] == hub[1]):
@@ -143,7 +143,7 @@ def ml_solve(data, parameters):
     new_parameters = list(parameters)
     top_pars = [labels, parameters, [0, 0, 0, 0]]     # make a list with size 4
     ml_gbest = tuple(original_solution)
-    loops = 10
+    loops = 2  # TODO: the number of searches for each parameter, change if needed
 
     for p in range(0, len(top_pars[0][:])):
         ''' for each parameter loop individually and check it's improvement '''
